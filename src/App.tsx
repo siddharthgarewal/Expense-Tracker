@@ -1,11 +1,14 @@
 import "./App.css";
+import ExpenseForm from "./components/add-expense-form/ExpenseForm";
 import Header from "./components/header/Header";
 
 function App() {
   return (
     <div className="App">
       <Header />
-      This site is under development.
+      <div className="subpart">
+        <ExpenseForm />
+      </div>
     </div>
   );
 }
