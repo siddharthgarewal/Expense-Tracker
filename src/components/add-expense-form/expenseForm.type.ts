@@ -1,9 +1,9 @@
 export interface FormData {
   expenseName: string;
-  price: number;
+  price: number | null;
   category: string;
   description: string;
-  date: Date | null;
+  date: object | null;
 }
 
 export const categories = [

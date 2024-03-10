@@ -9,11 +9,13 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { FormData, categories } from "./expenseForm.type";
 import "./ExpenseForm.css";
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import dayjs from "dayjs";
 
 const ExpenseForm = () => {
   const [formData, setFormData] = useState<FormData>({
     expenseName: "",
-    price: 0,
+    price: null,
     category: "",
     description: "",
     date: null,
@@ -30,6 +32,14 @@ const ExpenseForm = () => {
 
   const handleDateChange = (date: any) => {
     setFormData({ ...formData, date });
+  };
+
+  const handleTodaysDate = (event: any) => {
+    if (event.target.checked) {
+      setFormData({ ...formData, date: dayjs() });
+    } else {
+      setFormData({ ...formData, date: null });
+    }
   };
 
   return (
@@ -96,6 +106,12 @@ const ExpenseForm = () => {
           sx={{ width: "100%" }}
         />
       </LocalizationProvider>
+      <FormGroup sx={{ width: "100%" }}>
+        <FormControlLabel
+          control={<Checkbox onClick={handleTodaysDate} />}
+          label="Today's date"
+        />
+      </FormGroup>
       <Button type="submit" variant="contained" color="primary" size="large">
         Add Expense
       </Button>

@@ -1,4 +1,5 @@
-import { AppBar, Toolbar, Typography, Box } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, IconButton } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 function Header() {
   return (
@@ -14,7 +15,9 @@ function Header() {
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         {/* <IconButton color="inherit">Your Search Icon</IconButton> */}
-        {/* <IconButton color="inherit">Your Account Icon</IconButton> */}
+        <IconButton color="primary">
+          <AccountCircleIcon sx={{ height: "2.5rem", width: "2.5rem" }} />
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
