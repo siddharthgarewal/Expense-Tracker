@@ -1,3 +1,11 @@
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .subpart {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
 }
