@@ -1,7 +1,28 @@
-import { AppBar, Toolbar, Typography, Box, IconButton } from "@mui/material";
+import { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 
 function Header() {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <AppBar position="static" sx={{ backgroundColor: "white" }}>
       <Toolbar>
@@ -14,10 +35,38 @@ function Header() {
           Expense Tracker
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        {/* <IconButton color="inherit">Your Search Icon</IconButton> */}
-        <IconButton color="primary">
+        <IconButton
+          color="primary"
+          id="basic-button"
+          aria-controls={open ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={handleClick}
+        >
           <AccountCircleIcon sx={{ height: "2.5rem", width: "2.5rem" }} />
         </IconButton>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={handleClose}>
+            <PermIdentityOutlinedIcon />
+            Profile
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <AssessmentOutlinedIcon />
+            My Expenses
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <LogoutOutlinedIcon />
+            Logout
+          </MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );
