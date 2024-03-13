@@ -1,6 +1,6 @@
 function Test() {
   return (
-    <div>Test</div>
+    <div>Test 1</div>
   )
 }
 
