@@ -7,13 +7,14 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { FormData, categories } from "./expenseForm.type";
+import { ExpenseData, categories } from "./expenseForm.type";
 import "./ExpenseForm.css";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import dayjs from "dayjs";
+import { ExpenseService } from "../../services/expense.service";
 
 const ExpenseForm = () => {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<ExpenseData>({
     expenseName: "",
     price: null,
     category: "",
@@ -23,7 +24,25 @@ const ExpenseForm = () => {
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    console.log("Form Submitted:", formData);
+    const newExpense = {
+      ...formData,
+      date: dayjs(formData.date).toDate(),
+    };
+
+    const expense = new ExpenseService();
+    expense
+      .addExpense(newExpense)
+      .then((data) => {
+        console.log("Successful submission!", data);
+        setFormData({
+          expenseName: "",
+          price: null,
+          category: "",
+          description: "",
+          date: null,
+        });
+      })
+      .catch((err) => console.error(err));
   };
 
   const handleChange = (event: { target: { name: any; value: any } }) => {
