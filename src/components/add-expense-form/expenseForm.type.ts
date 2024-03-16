@@ -1,9 +1,11 @@
-export interface FormData {
+import { Dayjs } from "dayjs";
+
+export interface ExpenseData {
   expenseName: string;
   price: number | null;
   category: string;
   description: string;
-  date: object | null;
+  date: Date | Dayjs | null;
 }
 
 export const categories = [

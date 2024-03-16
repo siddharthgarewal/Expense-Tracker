@@ -16,9 +16,16 @@ import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const menuStyle = {
+    display: "flex",
+    gap: "10px",
+  };
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -54,15 +61,15 @@ function Header() {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem onClick={handleClose}>
+          <MenuItem sx={menuStyle} onClick={handleClose}>
             <PermIdentityOutlinedIcon />
             Profile
           </MenuItem>
-          <MenuItem onClick={handleClose}>
+          <MenuItem sx={menuStyle} onClick={handleClose}>
             <AssessmentOutlinedIcon />
             My Expenses
           </MenuItem>
-          <MenuItem onClick={handleClose}>
+          <MenuItem sx={menuStyle} onClick={handleClose}>
             <LogoutOutlinedIcon />
             Logout
           </MenuItem>
