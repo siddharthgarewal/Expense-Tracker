@@ -9,13 +9,15 @@ import {
   MenuItem,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const menuStyle = {
     display: "flex",
@@ -28,6 +30,11 @@ function Header() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleNavigation = (url: string) => {
+    navigate(url);
+    handleClose();
   };
 
   return (
@@ -61,11 +68,14 @@ function Header() {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem sx={menuStyle} onClick={handleClose}>
-            <PermIdentityOutlinedIcon />
-            Profile
+          <MenuItem sx={menuStyle} onClick={() => handleNavigation("/")}>
+            <PostAddOutlinedIcon />
+            Add Expense
           </MenuItem>
-          <MenuItem sx={menuStyle} onClick={handleClose}>
+          <MenuItem
+            sx={menuStyle}
+            onClick={() => handleNavigation("/my-expense")}
+          >
             <AssessmentOutlinedIcon />
             My Expenses
           </MenuItem>
