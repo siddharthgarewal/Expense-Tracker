@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
@@ -11,9 +11,20 @@ import { ExpenseData, categories } from "./expenseForm.type";
 import "./ExpenseForm.css";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import dayjs from "dayjs";
-import { ExpenseService } from "../../services/expense.service";
 
-const ExpenseForm = () => {
+interface ExpenseFormPropType {
+  isEditForm?: boolean;
+  sendFormData: (value: any) => void;
+  handleClose?: () => void;
+  initialExpenseValue?: any;
+}
+
+const ExpenseForm = ({
+  isEditForm = false,
+  sendFormData,
+  handleClose,
+  initialExpenseValue,
+}: ExpenseFormPropType) => {
   const [formData, setFormData] = useState<ExpenseData>({
     expenseName: "",
     price: null,
@@ -28,21 +39,14 @@ const ExpenseForm = () => {
       ...formData,
       date: dayjs(formData.date).toDate(),
     };
-
-    const expense = new ExpenseService();
-    expense
-      .addExpense(newExpense)
-      .then((data) => {
-        console.log("Successful submission!", data);
-        setFormData({
-          expenseName: "",
-          price: null,
-          category: "",
-          description: "",
-          date: null,
-        });
-      })
-      .catch((err) => console.error(err));
+    sendFormData(newExpense);
+    setFormData({
+      expenseName: "",
+      price: null,
+      category: "",
+      description: "",
+      date: null,
+    });
   };
 
   const handleChange = (event: { target: { name: any; value: any } }) => {
@@ -61,8 +65,27 @@ const ExpenseForm = () => {
     }
   };
 
+  useEffect(() => {
+    if (initialExpenseValue) {
+      const { expenseName, price, category, description, date } =
+        initialExpenseValue;
+      const jsDate = new Date(date.seconds * 1000 + date.nanoseconds / 1000000);
+      const formattedDate = dayjs(jsDate);
+      setFormData({
+        expenseName,
+        price,
+        category,
+        description,
+        date: formattedDate,
+      });
+    }
+  }, [initialExpenseValue]);
+
   return (
-    <form className="formContainer" onSubmit={handleSubmit}>
+    <form
+      className={`${isEditForm ? "" : "formContainer"}`}
+      onSubmit={handleSubmit}
+    >
       <TextField
         label="Expense Name"
         name="expenseName"
@@ -131,9 +154,39 @@ const ExpenseForm = () => {
           label="Today's date"
         />
       </FormGroup>
-      <Button type="submit" variant="contained" color="primary" size="large">
-        Add Expense
-      </Button>
+      {isEditForm ? (
+        <div className="edit-buttons">
+          <Button
+            type="reset"
+            variant="outlined"
+            color="info"
+            size="medium"
+            sx={{ mt: 4 }}
+            onClick={handleClose}
+          >
+            Close
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            size="medium"
+            sx={{ mt: 4 }}
+          >
+            Apply
+          </Button>
+        </div>
+      ) : (
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="large"
+          sx={{ mt: 4 }}
+        >
+          Add Expense
+        </Button>
+      )}
     </form>
   );
 };
