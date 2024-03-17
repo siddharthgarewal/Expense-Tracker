@@ -46,7 +46,7 @@ function Header() {
           component="div"
           sx={{ color: "text.secondary", fontWeight: "600" }}
         >
-          Expense Tracker
+          Expensify
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         <IconButton
