@@ -1,4 +1,4 @@
-import { addDoc, collection } from "@firebase/firestore";
+import { addDoc, collection, getDocs } from "@firebase/firestore";
 import { db } from "../firebase";
 import { ExpenseData } from "../components/add-expense-form/expenseForm.type";
 
@@ -11,5 +11,9 @@ export class ExpenseService {
 
   addExpense(newExpense: ExpenseData) {
     return addDoc(this.expenseRef, newExpense);
+  }
+
+  getAllExpense() {
+    return getDocs(this.expenseRef);
   }
 }
