@@ -11,20 +11,30 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useState } from "react";
 import EditExpense from "../edit-expense/EditExpense";
+import DeleteExpense from "../delete-expense/DeleteExpense";
 
 function ExpenseCard({ expense }: { expense: any }) {
   const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const { expenseName, price, category, description, date } = expense;
   const jsDate = new Date(date.seconds * 1000 + date.nanoseconds / 1000000);
   const formattedDate = jsDate.toDateString();
 
-  const handleClickOpen = () => {
+  const handleEditOpen = () => {
     setEditOpen(true);
   };
 
-  const handleClose = () => {
+  const handleEditClose = () => {
     setEditOpen(false);
+  };
+
+  const handleDeleteOpen = () => {
+    setDeleteOpen(true);
+  };
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
   };
 
   return (
@@ -55,7 +65,7 @@ function ExpenseCard({ expense }: { expense: any }) {
             size="small"
             color="info"
             startIcon={<EditOutlinedIcon />}
-            onClick={handleClickOpen}
+            onClick={handleEditOpen}
           >
             Edit
           </Button>
@@ -64,6 +74,7 @@ function ExpenseCard({ expense }: { expense: any }) {
             size="small"
             color="error"
             startIcon={<DeleteOutlineOutlinedIcon />}
+            onClick={handleDeleteOpen}
           >
             Delete
           </Button>
@@ -71,7 +82,12 @@ function ExpenseCard({ expense }: { expense: any }) {
       </Card>
       <EditExpense
         open={editOpen}
-        handleClose={handleClose}
+        handleClose={handleEditClose}
+        expenseData={expense}
+      />
+      <DeleteExpense
+        open={deleteOpen}
+        handleClose={handleDeleteClose}
         expenseData={expense}
       />
     </>
