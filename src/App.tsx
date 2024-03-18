@@ -6,6 +6,11 @@ import MyExpense from "./components/my-expense/MyExpense";
 import { ExpenseData } from "./components/add-expense-form/expenseForm.type";
 import { ExpenseService } from "./services/expense.service";
 import { useSnackbar } from "notistack";
+import SignUp from "./components/auth/SignUp";
+import SignIn from "./components/auth/SignIn";
+import Home from "./components/auth/Home";
+import { UserAuthContextProvider } from "./components/context/UserAuthContext";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
   const expense = new ExpenseService();
@@ -31,6 +36,15 @@ function App() {
           />
           <Route path="/my-expense" element={<MyExpense />} />
         </Routes>
+        
+        <UserAuthContextProvider>
+        <Routes>
+          <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+
+          <Route path="/" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+       </UserAuthContextProvider>
       </div>
     </div>
   );
