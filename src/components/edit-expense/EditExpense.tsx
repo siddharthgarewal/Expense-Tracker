@@ -2,6 +2,7 @@ import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 import ExpenseForm from "../add-expense-form/ExpenseForm";
 import { ExpenseData } from "../add-expense-form/expenseForm.type";
 import { ExpenseService } from "../../services/expense.service";
+import { useSnackbar } from "notistack";
 
 interface EditExpensePropType {
   open: boolean;
@@ -10,12 +11,17 @@ interface EditExpensePropType {
 }
 
 function EditExpense({ open, handleClose, expenseData }: EditExpensePropType) {
+  const expense = new ExpenseService();
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleUpdateExpense = (updatedExpense: ExpenseData) => {
-    const expense = new ExpenseService();
     expense
       .updateExpense(updatedExpense, expenseData.id)
-      .then((data) => console.log("successfully updated", data))
-      .catch((err) => console.log(err));
+      .then(() => {
+        enqueueSnackbar("Successfully updated expense", { variant: "success" });
+        handleClose();
+      })
+      .catch((err) => enqueueSnackbar(err, { variant: "error" }));
   };
 
   return (

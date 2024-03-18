@@ -6,6 +6,7 @@ import {
   Button,
 } from "@mui/material";
 import { ExpenseService } from "../../services/expense.service";
+import { useSnackbar } from "notistack";
 
 interface DeleteExpensePropType {
   open: boolean;
@@ -18,14 +19,20 @@ function DeleteExpense({
   handleClose,
   expenseData,
 }: DeleteExpensePropType) {
+  const expense = new ExpenseService();
   const { expenseName, id } = expenseData;
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleDelete = () => {
-    const expense = new ExpenseService();
     expense
       .deleteExpense(id)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then(() => {
+        enqueueSnackbar(`Successfully deleted ${expenseName}`, {
+          variant: "success",
+        });
+        handleClose();
+      })
+      .catch((err) => enqueueSnackbar(err, { variant: "error" }));
   };
 
   return (

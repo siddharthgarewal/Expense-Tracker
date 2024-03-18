@@ -5,16 +5,19 @@ import Header from "./components/header/Header";
 import MyExpense from "./components/my-expense/MyExpense";
 import { ExpenseData } from "./components/add-expense-form/expenseForm.type";
 import { ExpenseService } from "./services/expense.service";
+import { useSnackbar } from "notistack";
 
 function App() {
+  const expense = new ExpenseService();
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleExpenseSubmit = (newExpense: ExpenseData) => {
-    const expense = new ExpenseService();
     expense
       .addExpense(newExpense)
-      .then((data) => {
-        console.log("Successful submission!", data);
-      })
-      .catch((err) => console.error(err));
+      .then(() =>
+        enqueueSnackbar("Expense added successfully", { variant: "success" })
+      )
+      .catch((err) => enqueueSnackbar(err, { variant: "error" }));
   };
 
   return (
