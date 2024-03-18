@@ -98,7 +98,7 @@ const ExpenseForm = ({
       <TextField
         label="Price"
         name="price"
-        value={formData.price}
+        value={formData.price || ""}
         onChange={handleChange}
         fullWidth
         margin="normal"
