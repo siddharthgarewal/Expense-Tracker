@@ -1,13 +1,14 @@
-// In your UserAuthContext file
-
-import { createContext, useContext, ReactNode } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createContext, useContext, ReactNode, useEffect, useState } from 'react';
+import {  User, createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword,signOut, onAuthStateChanged,GoogleAuthProvider,signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
 
 interface UserAuthContextType {
-  signUp: (firstName:string,lastName:string,email: string, password: string) => Promise<any>; 
-  signIn: (email: string, password: string) => Promise<any>; // Adjust the return type as necessary
+  user: User | null;
+  signUp: (firstName: string, lastName: string, email: string, password: string) => Promise<any>; 
+  signIn: (email: string, password: string) => Promise<any>; 
+  logOut: () => Promise<void>;
+  googleSignIn: () => Promise<any>; 
 }
 
 const UserAuthContext = createContext<UserAuthContextType | undefined>(undefined);
@@ -21,17 +22,37 @@ export const useUserAuth = () => {
 };
 
 export const UserAuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const signUp = async (firstName:string,lastName:string,email: string, password: string) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    // Cleanup function
+    return () => unsubscribe();
+  }, []);
+
+  const signUp = async (firstName: string, lastName: string, email: string, password: string) => {
     return await createUserWithEmailAndPassword(auth, email, password);
   };
 
   const signIn = async (email: string, password: string) => {
+    console.log("Email:",email);
     return await signInWithEmailAndPassword(auth, email, password);
   };
 
+  const logOut: () => Promise<void> = () => {
+    return signOut(auth);
+  };
+
+  function googleSignIn(){
+    const googleAuthProvider = new GoogleAuthProvider();
+    return signInWithPopup(auth,googleAuthProvider);
+  }
 
   return (
-    <UserAuthContext.Provider value={{ signUp,signIn }}>
+    <UserAuthContext.Provider value={{ user, signUp, signIn,logOut,googleSignIn }}>
       {children}
     </UserAuthContext.Provider>
   );

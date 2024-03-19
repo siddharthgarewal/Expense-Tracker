@@ -40,7 +40,6 @@ function App() {
         <UserAuthContextProvider>
         <Routes>
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-
           <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>

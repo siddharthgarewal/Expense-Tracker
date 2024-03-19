@@ -13,10 +13,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {useState} from "react";
+import {useState,MouseEvent, MouseEventHandler} from "react";
 import { useUserAuth } from '../context/UserAuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Stack } from '@mui/material';
+import GoogleButton from 'react-google-button';
 
 function Copyright(props: any) {
   return (
@@ -40,7 +41,7 @@ export default function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const { signIn } = useUserAuth(); 
+    const { signIn,googleSignIn } = useUserAuth(); 
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -61,6 +62,16 @@ export default function SignIn() {
         email: formData.get('email'),
         password: formData.get('password'),
       });
+    };
+
+    const handleGoogleSignIn: MouseEventHandler<HTMLDivElement> = async (event: { preventDefault: () => void; }) => {
+      event.preventDefault();
+      try {
+        await googleSignIn();
+        navigate("/home");
+      } catch (error) {
+        console.log(error);
+      }
     };
 
   return (
@@ -123,6 +134,7 @@ export default function SignIn() {
             >
               Sign In
             </Button>
+            <GoogleButton className="g-btn" type='dark' onClick={handleGoogleSignIn} />
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
