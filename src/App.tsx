@@ -6,6 +6,11 @@ import MyExpense from "./components/my-expense/MyExpense";
 import { ExpenseData } from "./components/add-expense-form/expenseForm.type";
 import { ExpenseService } from "./services/expense.service";
 import { useSnackbar } from "notistack";
+import SignUp from "./components/auth/SignUp";
+import SignIn from "./components/auth/SignIn";
+import Home from "./components/auth/Home";
+import { UserAuthContextProvider } from "./components/context/UserAuthContext";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
   const expense = new ExpenseService();
@@ -22,16 +27,39 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
-      <div className="subpart">
-        <Routes>
-          <Route
-            path="/"
-            element={<ExpenseForm sendFormData={handleExpenseSubmit} />}
-          />
-          <Route path="/my-expense" element={<MyExpense />} />
-        </Routes>
-      </div>
+      <UserAuthContextProvider>
+        <Header />
+        <div className="subpart">
+          <Routes>
+            <Route path="/" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/add-expense"
+              element={
+                <ProtectedRoute>
+                  <ExpenseForm sendFormData={handleExpenseSubmit} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-expense"
+              element={
+                <ProtectedRoute>
+                  <MyExpense />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+      </UserAuthContextProvider>
     </div>
   );
 }

@@ -13,12 +13,14 @@ import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import { useNavigate } from "react-router-dom";
+import { useUserAuth } from "../context/UserAuthContext";
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-
+  const { user, logOut } = useUserAuth();
+  console.log(user);
   const menuStyle = {
     display: "flex",
     gap: "10px",
@@ -28,13 +30,21 @@ function Header() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setAnchorEl(null);
   };
 
   const handleNavigation = (url: string) => {
     navigate(url);
     handleClose();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -68,7 +78,10 @@ function Header() {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem sx={menuStyle} onClick={() => handleNavigation("/")}>
+          <MenuItem
+            sx={menuStyle}
+            onClick={() => handleNavigation("/add-expense")}
+          >
             <PostAddOutlinedIcon />
             Add Expense
           </MenuItem>
@@ -79,7 +92,7 @@ function Header() {
             <AssessmentOutlinedIcon />
             My Expenses
           </MenuItem>
-          <MenuItem sx={menuStyle} onClick={handleClose}>
+          <MenuItem sx={menuStyle} onClick={handleLogout}>
             <LogoutOutlinedIcon />
             Logout
           </MenuItem>
