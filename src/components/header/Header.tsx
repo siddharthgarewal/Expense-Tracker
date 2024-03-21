@@ -19,7 +19,8 @@ function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-
+  const { user, logOut } = useUserAuth();
+  console.log(user);
   const menuStyle = {
     display: "flex",
     gap: "10px",
@@ -30,17 +31,20 @@ function Header() {
   };
 
   const handleClose = async () => {
-    // const {user,logOut} = useUserAuth();
-    // try{
-    //   await logOut();
-    // }catch(error){
-    //   console.log(error);
-    // }
+    setAnchorEl(null);
   };
 
   const handleNavigation = (url: string) => {
     navigate(url);
     handleClose();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -74,7 +78,10 @@ function Header() {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem sx={menuStyle} onClick={() => handleNavigation("/")}>
+          <MenuItem
+            sx={menuStyle}
+            onClick={() => handleNavigation("/add-expense")}
+          >
             <PostAddOutlinedIcon />
             Add Expense
           </MenuItem>
@@ -85,7 +92,7 @@ function Header() {
             <AssessmentOutlinedIcon />
             My Expenses
           </MenuItem>
-          <MenuItem sx={menuStyle} onClick={handleClose}>
+          <MenuItem sx={menuStyle} onClick={handleLogout}>
             <LogoutOutlinedIcon />
             Logout
           </MenuItem>

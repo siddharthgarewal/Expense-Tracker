@@ -1,6 +1,6 @@
-import React from 'react'
-import { useUserAuth } from '../context/UserAuthContext';
-import { Button } from '@mui/material';
+import React from "react";
+import { useUserAuth } from "../context/UserAuthContext";
+import { Button } from "@mui/material";
 
 export const Home = () => {
   const { user, logOut } = useUserAuth();
@@ -12,13 +12,13 @@ export const Home = () => {
     } catch (error) {
       console.log(error);
     }
-};
+  };
 
   return (
     <div>
       <h1>Home Welcome</h1>
-      <br/>
-      <h1>{user && user.email}</h1>
+      <br />
+      <h1>{user && user.displayName}</h1>
       <Button
         type="submit"
         fullWidth
@@ -26,10 +26,10 @@ export const Home = () => {
         sx={{ mt: 3, mb: 2 }}
         onClick={handleLogOut}
       >
-      Logout
+        Logout
       </Button>
     </div>
-  )
-}
+  );
+};
 
 export default Home;

@@ -27,24 +27,39 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
-      <div className="subpart">
-        <Routes>
-          <Route
-            path="/"
-            element={<ExpenseForm sendFormData={handleExpenseSubmit} />}
-          />
-          <Route path="/my-expense" element={<MyExpense />} />
-        </Routes>
-        
-        <UserAuthContextProvider>
-        <Routes>
-          <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="/" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Routes>
-       </UserAuthContextProvider>
-      </div>
+      <UserAuthContextProvider>
+        <Header />
+        <div className="subpart">
+          <Routes>
+            <Route path="/" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/add-expense"
+              element={
+                <ProtectedRoute>
+                  <ExpenseForm sendFormData={handleExpenseSubmit} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-expense"
+              element={
+                <ProtectedRoute>
+                  <MyExpense />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+      </UserAuthContextProvider>
     </div>
   );
 }
