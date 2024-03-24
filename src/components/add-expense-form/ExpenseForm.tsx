@@ -11,6 +11,7 @@ import { ExpenseData, categories } from "./expenseForm.type";
 import "./ExpenseForm.css";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import dayjs from "dayjs";
+import { useUserAuth } from "../context/UserAuthContext";
 
 interface ExpenseFormPropType {
   isEditForm?: boolean;
@@ -32,12 +33,14 @@ const ExpenseForm = ({
     description: "",
     date: null,
   });
+  const { user } = useUserAuth();
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     const newExpense = {
       ...formData,
       date: dayjs(formData.date).toDate(),
+      user: user?.email,
     };
     sendFormData(newExpense);
     setFormData({
