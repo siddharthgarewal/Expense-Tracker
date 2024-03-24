@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { ExpenseService } from "../../services/expense.service";
 import ExpenseCard from "../expense-card/ExpenseCard";
 import "./MyExpense.css";
+import Loader from "../loader/Loader";
 
 function MyExpense() {
   const [expenseData, setExpenseData] = useState<any>([]);
-  console.log(expenseData);
+  const [loader, setLoader] = useState(false);
 
   const getExpense = async () => {
+    setLoader(true);
     const expense = new ExpenseService();
     try {
       const querySnapShot = await expense.getAllExpense();
@@ -16,8 +18,10 @@ function MyExpense() {
         id: doc.id,
       }));
       setExpenseData(data);
+      setLoader(false);
     } catch (error) {
       console.log(error);
+      setLoader(false);
     }
   };
 
@@ -27,9 +31,11 @@ function MyExpense() {
 
   return (
     <div className="my_expenses">
-      {expenseData.map((expense: any) => (
-        <ExpenseCard expense={expense} />
-      ))}
+      {loader ? (
+        <Loader />
+      ) : (
+        expenseData.map((expense: any) => <ExpenseCard expense={expense} />)
+      )}
     </div>
   );
 }

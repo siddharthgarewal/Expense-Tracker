@@ -7,6 +7,8 @@ import {
 } from "@mui/material";
 import { ExpenseService } from "../../services/expense.service";
 import { useSnackbar } from "notistack";
+import { useState } from "react";
+import Loader from "../loader/Loader";
 
 interface DeleteExpensePropType {
   open: boolean;
@@ -22,8 +24,10 @@ function DeleteExpense({
   const expense = new ExpenseService();
   const { expenseName, id } = expenseData;
   const { enqueueSnackbar } = useSnackbar();
+  const [loader, setLoader] = useState(false);
 
   const handleDelete = () => {
+    setLoader(true);
     expense
       .deleteExpense(id)
       .then(() => {
@@ -31,21 +35,33 @@ function DeleteExpense({
           variant: "success",
         });
         handleClose();
+        setLoader(false);
       })
-      .catch((err) => enqueueSnackbar(err, { variant: "error" }));
+      .catch((err) => {
+        enqueueSnackbar(err, { variant: "error" });
+        setLoader(false);
+      });
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Delete {expenseName}</DialogTitle>
-      <DialogContent>
-        Are you sure you want to delete record for <b>{expenseName}</b>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleDelete}>Yes</Button>
-        <Button onClick={handleClose}>No</Button>
-      </DialogActions>
-    </Dialog>
+    <>
+      <Dialog open={open} onClose={handleClose}>
+        {loader ? (
+          <Loader />
+        ) : (
+          <>
+            <DialogTitle>Delete {expenseName}</DialogTitle>
+            <DialogContent>
+              Are you sure you want to delete record for <b>{expenseName}</b>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDelete}>Yes</Button>
+              <Button onClick={handleClose}>No</Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
+    </>
   );
 }
 

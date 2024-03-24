@@ -59,16 +59,18 @@ function Header() {
           Expensify
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        <IconButton
-          color="primary"
-          id="basic-button"
-          aria-controls={open ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-        >
-          <AccountCircleIcon sx={{ height: "2.5rem", width: "2.5rem" }} />
-        </IconButton>
+        {user && (
+          <IconButton
+            color="primary"
+            id="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+          >
+            <AccountCircleIcon sx={{ height: "2.5rem", width: "2.5rem" }} />
+          </IconButton>
+        )}
         <Menu
           id="basic-menu"
           anchorEl={anchorEl}
@@ -82,6 +84,12 @@ function Header() {
             sx={menuStyle}
             onClick={() => handleNavigation("/add-expense")}
           >
+            <b>{user?.displayName}</b>
+          </MenuItem>
+          <MenuItem
+            sx={menuStyle}
+            onClick={() => handleNavigation("/add-expense")}
+          >
             <PostAddOutlinedIcon />
             Add Expense
           </MenuItem>
@@ -90,7 +98,7 @@ function Header() {
             onClick={() => handleNavigation("/my-expense")}
           >
             <AssessmentOutlinedIcon />
-            My Expenses
+            Track Expense
           </MenuItem>
           <MenuItem sx={menuStyle} onClick={handleLogout}>
             <LogoutOutlinedIcon />
