@@ -8,7 +8,6 @@ import { ExpenseService } from "./services/expense.service";
 import { useSnackbar } from "notistack";
 import SignUp from "./components/auth/SignUp";
 import SignIn from "./components/auth/SignIn";
-import Home from "./components/auth/Home";
 import { UserAuthContextProvider } from "./components/context/UserAuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -46,14 +45,6 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MyExpense />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/home"
-              element={
-                <ProtectedRoute>
-                  <Home />
                 </ProtectedRoute>
               }
             />
