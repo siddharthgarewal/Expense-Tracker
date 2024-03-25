@@ -35,7 +35,7 @@ export default function SignIn() {
     setError("");
     try {
       await signIn(email, password);
-      navigate("/add-expense");
+      navigate("/my-expense");
       setLoader(false);
     } catch (err: any) {
       setError(err.message);
@@ -51,7 +51,7 @@ export default function SignIn() {
     setLoader(true);
     try {
       await googleSignIn();
-      navigate("/add-expense");
+      navigate("/my-expense");
       setLoader(false);
     } catch (error: any) {
       setError(error.message);
