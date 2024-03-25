@@ -7,17 +7,19 @@ import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router";
+import { useUserAuth } from "../context/UserAuthContext";
 
 function MyExpense() {
   const [expenseData, setExpenseData] = useState<any>([]);
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
+  const { user } = useUserAuth();
 
   const getExpense = async () => {
     setLoader(true);
     const expense = new ExpenseService();
     try {
-      const querySnapShot = await expense.getAllExpense();
+      const querySnapShot = await expense.getAllExpense(user);
       const data = querySnapShot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,

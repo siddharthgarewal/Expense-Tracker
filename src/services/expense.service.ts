@@ -4,7 +4,9 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  query,
   updateDoc,
+  where,
 } from "@firebase/firestore";
 import { db } from "../firebase";
 import { ExpenseData } from "../components/add-expense-form/expenseForm.type";
@@ -20,8 +22,9 @@ export class ExpenseService {
     return addDoc(this.expenseRef, newExpense);
   }
 
-  getAllExpense() {
-    return getDocs(this.expenseRef);
+  getAllExpense(user: any) {
+    const queryRef = query(this.expenseRef, where("user", "==", user.email));
+    return getDocs(queryRef);
   }
 
   updateExpense(updatedExpense: any, id: string) {
