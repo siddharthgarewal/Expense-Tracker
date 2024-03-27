@@ -13,7 +13,12 @@ import { useState } from "react";
 import EditExpense from "../edit-expense/EditExpense";
 import DeleteExpense from "../delete-expense/DeleteExpense";
 
-function ExpenseCard({ expense }: { expense: any }) {
+interface ExpenseCardPropType {
+  expense: any;
+  deleteExpense: (id: string) => void;
+}
+
+function ExpenseCard({ expense, deleteExpense }: ExpenseCardPropType) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -89,6 +94,7 @@ function ExpenseCard({ expense }: { expense: any }) {
         open={deleteOpen}
         handleClose={handleDeleteClose}
         expenseData={expense}
+        deleteExpense={(id: string) => deleteExpense(id)}
       />
     </>
   );

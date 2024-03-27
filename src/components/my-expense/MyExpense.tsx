@@ -32,6 +32,13 @@ function MyExpense() {
     }
   };
 
+  const handleDelete = (id: string) => {
+    const filteredData = expenseData.filter(
+      (item: { id: string }) => item.id !== id
+    );
+    setExpenseData(filteredData);
+  };
+
   useEffect(() => {
     getExpense();
   }, []);
@@ -41,7 +48,12 @@ function MyExpense() {
       {loader ? (
         <Loader />
       ) : expenseData.length > 0 ? (
-        expenseData.map((expense: any) => <ExpenseCard expense={expense} />)
+        expenseData.map((expense: any) => (
+          <ExpenseCard
+            expense={expense}
+            deleteExpense={(id: string) => handleDelete(id)}
+          />
+        ))
       ) : (
         <Box
           sx={{
