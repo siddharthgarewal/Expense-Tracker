@@ -16,9 +16,14 @@ import DeleteExpense from "../delete-expense/DeleteExpense";
 interface ExpenseCardPropType {
   expense: any;
   deleteExpense: (id: string) => void;
+  updateExpense: (updatedExpense: any) => void;
 }
 
-function ExpenseCard({ expense, deleteExpense }: ExpenseCardPropType) {
+function ExpenseCard({
+  expense,
+  deleteExpense,
+  updateExpense,
+}: ExpenseCardPropType) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -89,12 +94,13 @@ function ExpenseCard({ expense, deleteExpense }: ExpenseCardPropType) {
         open={editOpen}
         handleClose={handleEditClose}
         expenseData={expense}
+        updateExpense={updateExpense}
       />
       <DeleteExpense
         open={deleteOpen}
         handleClose={handleDeleteClose}
         expenseData={expense}
-        deleteExpense={(id: string) => deleteExpense(id)}
+        deleteExpense={deleteExpense}
       />
     </>
   );

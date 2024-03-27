@@ -39,6 +39,14 @@ function MyExpense() {
     setExpenseData(filteredData);
   };
 
+  const handleUpdate = (updatedExpense: any) => {
+    const updatedData = expenseData.map((item: { id: string }) => {
+      if (item.id === updatedExpense.id) return updatedExpense;
+      else return item;
+    });
+    setExpenseData(updatedData);
+  };
+
   useEffect(() => {
     getExpense();
   }, []);
@@ -51,7 +59,8 @@ function MyExpense() {
         expenseData.map((expense: any) => (
           <ExpenseCard
             expense={expense}
-            deleteExpense={(id: string) => handleDelete(id)}
+            deleteExpense={handleDelete}
+            updateExpense={handleUpdate}
           />
         ))
       ) : (
