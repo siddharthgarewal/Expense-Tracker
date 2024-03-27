@@ -7,17 +7,19 @@ import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router";
+import { useUserAuth } from "../context/UserAuthContext";
 
 function MyExpense() {
   const [expenseData, setExpenseData] = useState<any>([]);
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
+  const { user } = useUserAuth();
 
   const getExpense = async () => {
     setLoader(true);
     const expense = new ExpenseService();
     try {
-      const querySnapShot = await expense.getAllExpense();
+      const querySnapShot = await expense.getAllExpense(user);
       const data = querySnapShot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -30,8 +32,24 @@ function MyExpense() {
     }
   };
 
+  const handleDelete = (id: string) => {
+    const filteredData = expenseData.filter(
+      (item: { id: string }) => item.id !== id
+    );
+    setExpenseData(filteredData);
+  };
+
+  const handleUpdate = (updatedExpense: any) => {
+    const updatedData = expenseData.map((item: { id: string }) => {
+      if (item.id === updatedExpense.id) return updatedExpense;
+      else return item;
+    });
+    setExpenseData(updatedData);
+  };
+
   useEffect(() => {
     getExpense();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -39,7 +57,13 @@ function MyExpense() {
       {loader ? (
         <Loader />
       ) : expenseData.length > 0 ? (
-        expenseData.map((expense: any) => <ExpenseCard expense={expense} />)
+        expenseData.map((expense: any) => (
+          <ExpenseCard
+            expense={expense}
+            deleteExpense={handleDelete}
+            updateExpense={handleUpdate}
+          />
+        ))
       ) : (
         <Box
           sx={{

@@ -14,12 +14,14 @@ interface DeleteExpensePropType {
   open: boolean;
   handleClose(): void;
   expenseData: any;
+  deleteExpense: (id: string) => void;
 }
 
 function DeleteExpense({
   open,
   handleClose,
   expenseData,
+  deleteExpense,
 }: DeleteExpensePropType) {
   const expense = new ExpenseService();
   const { expenseName, id } = expenseData;
@@ -35,6 +37,7 @@ function DeleteExpense({
           variant: "success",
         });
         handleClose();
+        deleteExpense(id);
         setLoader(false);
       })
       .catch((err) => {

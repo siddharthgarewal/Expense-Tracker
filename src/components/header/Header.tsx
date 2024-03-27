@@ -20,7 +20,7 @@ function Header() {
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const { user, logOut } = useUserAuth();
-  console.log(user);
+
   const menuStyle = {
     display: "flex",
     gap: "10px",
