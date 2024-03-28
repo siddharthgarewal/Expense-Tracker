@@ -49,14 +49,13 @@ export const UserAuthContextProvider = ({
   children: ReactNode;
 }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [pending, setPending] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
       setUser(user);
+      setPending(false);
     });
-
-    // Cleanup function
-    return () => unsubscribe();
   }, []);
 
   const signUp = async (
@@ -88,6 +87,10 @@ export const UserAuthContextProvider = ({
   function googleSignIn() {
     const googleAuthProvider = new GoogleAuthProvider();
     return signInWithPopup(auth, googleAuthProvider);
+  }
+
+  if (pending) {
+    return <>Loading...</>;
   }
 
   return (
