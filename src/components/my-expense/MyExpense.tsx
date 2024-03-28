@@ -20,10 +20,15 @@ function MyExpense() {
     const expense = new ExpenseService();
     try {
       const querySnapShot = await expense.getAllExpense(user);
-      const data = querySnapShot.docs.map((doc) => ({
+      const data = querySnapShot.docs.map((doc: any) => ({
         ...doc.data(),
         id: doc.id,
       }));
+      data.sort(
+        (a, b) =>
+          a.date.seconds - b.date.seconds ||
+          a.date.nanoseconds - b.date.nanoseconds
+      );
       setExpenseData(data);
       setLoader(false);
     } catch (error) {
@@ -31,7 +36,7 @@ function MyExpense() {
       setLoader(false);
     }
   };
-
+  console.log();
   const handleDelete = (id: string) => {
     const filteredData = expenseData.filter(
       (item: { id: string }) => item.id !== id
