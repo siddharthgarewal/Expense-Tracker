@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router";
 import { useUserAuth } from "../context/UserAuthContext";
+import ExpenseOptions from "../expense-options/ExpenseOptions";
 
 function MyExpense() {
   const [expenseData, setExpenseData] = useState<any>([]);
@@ -36,7 +37,7 @@ function MyExpense() {
       setLoader(false);
     }
   };
-  console.log();
+
   const handleDelete = (id: string) => {
     const filteredData = expenseData.filter(
       (item: { id: string }) => item.id !== id
@@ -58,17 +59,25 @@ function MyExpense() {
   }, []);
 
   return (
-    <div className="my_expenses">
+    <div>
+      {!loader && (
+        <ExpenseOptions
+          expenseData={expenseData}
+          setExpenseData={(expenses: any) => setExpenseData(expenses)}
+        />
+      )}
       {loader ? (
         <Loader />
       ) : expenseData.length > 0 ? (
-        expenseData.map((expense: any) => (
-          <ExpenseCard
-            expense={expense}
-            deleteExpense={handleDelete}
-            updateExpense={handleUpdate}
-          />
-        ))
+        <div className="my_expenses">
+          {expenseData.map((expense: any) => (
+            <ExpenseCard
+              expense={expense}
+              deleteExpense={handleDelete}
+              updateExpense={handleUpdate}
+            />
+          ))}
+        </div>
       ) : (
         <Box
           sx={{
