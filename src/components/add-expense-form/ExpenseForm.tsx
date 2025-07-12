@@ -7,9 +7,9 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { ExpenseData, categories } from "./expenseForm.type";
+import { ExpenseData, categories, currencies, frequencyOptions } from "./expenseForm.type";
 import "./ExpenseForm.css";
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup, Grid, Switch, Box, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useUserAuth } from "../context/UserAuthContext";
 
@@ -32,6 +32,9 @@ const ExpenseForm = ({
     category: "",
     description: "",
     date: null,
+    isRecurring: false,
+    frequency: "monthly",
+    currency: "USD",
   });
   const { user } = useUserAuth();
 
@@ -49,6 +52,9 @@ const ExpenseForm = ({
       category: "",
       description: "",
       date: null,
+      isRecurring: false,
+      frequency: "monthly",
+      currency: "USD",
     });
   };
 
@@ -68,9 +74,13 @@ const ExpenseForm = ({
     }
   };
 
+  const handleRecurringToggle = (event: any) => {
+    setFormData({ ...formData, isRecurring: event.target.checked });
+  };
+
   useEffect(() => {
     if (initialExpenseValue) {
-      const { expenseName, price, category, description, date } =
+      const { expenseName, price, category, description, date, isRecurring, frequency, currency } =
         initialExpenseValue;
       const jsDate = new Date(date.seconds * 1000 + date.nanoseconds / 1000000);
       const formattedDate = dayjs(jsDate);
@@ -80,92 +90,260 @@ const ExpenseForm = ({
         category,
         description,
         date: formattedDate,
+        isRecurring: isRecurring || false,
+        frequency: frequency || "monthly",
+        currency: currency || "USD",
       });
     }
   }, [initialExpenseValue]);
 
+  const getCurrencySymbol = (currencyCode: string) => {
+    const currency = currencies.find(c => c.code === currencyCode);
+    return currency?.symbol || currencyCode;
+  };
+
   return (
-    <form
-      className={`${isEditForm ? "" : "formContainer"}`}
-      onSubmit={handleSubmit}
+    <Box
+      sx={{
+        width: '100%',
+        maxWidth: isEditForm ? '100%' : '800px',
+        margin: '0 auto',
+        padding: isEditForm ? '0' : '24px',
+      }}
     >
-      <TextField
-        label="Expense Name"
-        name="expenseName"
-        value={formData.expenseName}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-        required
-      />
-      <TextField
-        label="Price"
-        name="price"
-        value={formData.price || ""}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-        type="number"
-        required
-      />
-      <FormControl fullWidth>
-        <InputLabel id="category-label">Category</InputLabel>
-        <Select
-          labelId="category-label"
-          id="category"
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          label="Category"
-          required
-        >
-          {categories.map((category: string) => {
-            return (
-              <MenuItem key={category} value={category}>
-                {category}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-      <TextField
-        label="Description"
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        fullWidth
-        multiline
-        rows={4}
-        margin="normal"
-      />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Date"
-          slotProps={{
-            textField: {
-              helperText: "MM/DD/YYYY",
-            },
+      {!isEditForm && (
+        <Box
+          sx={{
+            textAlign: 'center',
+            mb: 4,
+            padding: '32px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '20px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
           }}
-          value={formData.date}
-          onChange={handleDateChange}
-          sx={{ width: "100%" }}
-        />
-      </LocalizationProvider>
-      <FormGroup sx={{ width: "100%" }}>
-        <FormControlLabel
-          control={<Checkbox onClick={handleTodaysDate} />}
-          label="Today's date"
-        />
-      </FormGroup>
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 700,
+              background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              mb: 1,
+            }}
+          >
+            Add New Expense
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              color: 'rgba(255, 255, 255, 0.7)',
+            }}
+          >
+            Track your spending to gain better financial insights
+          </Typography>
+        </Box>
+      )}
+      
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          background: isEditForm ? 'transparent' : 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: isEditForm ? 'none' : 'blur(10px)',
+          border: isEditForm ? 'none' : '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: isEditForm ? '0' : '20px',
+          padding: isEditForm ? '0' : '32px',
+          boxShadow: isEditForm ? 'none' : '0 8px 32px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+              <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <TextField
+            label="Expense Name"
+            name="expenseName"
+            value={formData.expenseName}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '12px',
+                '&:hover': {
+                  background: 'rgba(255, 255, 255, 0.15)',
+                },
+                '&.Mui-focused': {
+                  background: 'rgba(255, 255, 255, 0.2)',
+                },
+              },
+              '& .MuiInputLabel-root': {
+                color: 'rgba(255, 255, 255, 0.8)',
+              },
+              '& .MuiInputBase-input': {
+                color: 'rgba(255, 255, 255, 0.9)',
+              },
+            }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label={`Price (${getCurrencySymbol(formData.currency || 'USD')})`}
+            name="price"
+            value={formData.price || ""}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            type="number"
+            required
+            inputProps={{ min: 0, step: 0.01 }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="currency-label">Currency</InputLabel>
+            <Select
+              labelId="currency-label"
+              id="currency"
+              name="currency"
+              value={formData.currency}
+              onChange={handleChange}
+              label="Currency"
+            >
+              {currencies.map((currency) => (
+                <MenuItem key={currency.code} value={currency.code}>
+                  {currency.code} ({currency.symbol})
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              labelId="category-label"
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              label="Category"
+              required
+            >
+              {categories.map((category: string) => {
+                return (
+                  <MenuItem key={category} value={category}>
+                    {category}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            label="Description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            fullWidth
+            multiline
+            rows={4}
+            margin="normal"
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Date"
+              slotProps={{
+                textField: {
+                  helperText: "MM/DD/YYYY",
+                  fullWidth: true,
+                  margin: "normal",
+                },
+              }}
+              value={formData.date}
+              onChange={handleDateChange}
+            />
+          </LocalizationProvider>
+        </Grid>
+
+        <Grid item xs={12}>
+          <FormGroup>
+            <FormControlLabel
+              control={<Checkbox onClick={handleTodaysDate} />}
+              label="Today's date"
+            />
+          </FormGroup>
+        </Grid>
+
+        <Grid item xs={12}>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={formData.isRecurring || false}
+                  onChange={handleRecurringToggle}
+                />
+              }
+              label="Recurring Expense"
+            />
+          </FormGroup>
+        </Grid>
+
+        {formData.isRecurring && (
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="frequency-label">Frequency</InputLabel>
+              <Select
+                labelId="frequency-label"
+                id="frequency"
+                name="frequency"
+                value={formData.frequency}
+                onChange={handleChange}
+                label="Frequency"
+              >
+                {frequencyOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        )}
+      </Grid>
+
       {isEditForm ? (
-        <div className="edit-buttons">
+        <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
           <Button
             type="reset"
             variant="outlined"
             color="info"
             size="medium"
-            sx={{ mt: 4 }}
             onClick={handleClose}
+            sx={{
+              borderRadius: '12px',
+              padding: '10px 24px',
+              fontWeight: 600,
+              textTransform: 'none',
+              borderColor: 'rgba(255, 255, 255, 0.3)',
+              color: 'rgba(255, 255, 255, 0.8)',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              },
+            }}
           >
             Close
           </Button>
@@ -174,24 +352,49 @@ const ExpenseForm = ({
             variant="contained"
             color="success"
             size="medium"
-            sx={{ mt: 4 }}
+            sx={{
+              borderRadius: '12px',
+              padding: '10px 24px',
+              fontWeight: 600,
+              textTransform: 'none',
+              background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #38a169 0%, #2f855a 100%)',
+                transform: 'translateY(-1px)',
+              },
+              transition: 'all 0.3s ease',
+            }}
           >
             Apply
           </Button>
-        </div>
+        </Box>
       ) : (
         <Button
           type="submit"
           variant="contained"
           color="primary"
           size="large"
-          sx={{ mt: 4 }}
+          sx={{
+            mt: 4,
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            borderRadius: '12px',
+            padding: '12px 32px',
+            fontSize: '1rem',
+            fontWeight: 600,
+            textTransform: 'none',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)',
+              transform: 'translateY(-1px)',
+            },
+            transition: 'all 0.3s ease',
+          }}
         >
           Add Expense
         </Button>
       )}
-    </form>
-  );
+        </Box>
+      </Box>
+    );
 };
 
 export default ExpenseForm;

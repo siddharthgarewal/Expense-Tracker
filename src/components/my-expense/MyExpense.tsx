@@ -9,6 +9,7 @@ import { Box } from "@mui/system";
 import { useNavigate } from "react-router";
 import { useUserAuth } from "../context/UserAuthContext";
 import ExpenseOptions from "../expense-options/ExpenseOptions";
+import QuickExpenseEntry from "../quick-entry/QuickExpenseEntry";
 
 function MyExpense() {
   const [expenseData, setExpenseData] = useState<any>([]);
@@ -77,14 +78,55 @@ function MyExpense() {
     setExpenseData(filteredExpense);
   };
 
+  const handleExpenseAdded = () => {
+    getExpense(); // Refresh the expense list
+  };
+
   return (
-    <div>
+    <Box>
+      {/* Page Header */}
+      <Box
+        sx={{
+          textAlign: 'center',
+          mb: 4,
+          padding: '32px',
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '20px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 700,
+            background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            mb: 1,
+          }}
+        >
+          My Expenses
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{
+            color: 'rgba(255, 255, 255, 0.7)',
+          }}
+        >
+          Track and manage all your expenses in one place
+        </Typography>
+      </Box>
+
       <ExpenseOptions
-        expenseData={originalData} // Pass original data for search filtering
+        expenseData={originalData}
         setExpenseData={(expenses: any) => setExpenseData(expenses)}
         setSearchValue={setSearchValue}
         handleSearch={handleSearch}
       />
+      
       {loader ? (
         <Loader />
       ) : expenseData.length > 0 ? (
@@ -94,7 +136,7 @@ function MyExpense() {
               expense={expense}
               deleteExpense={handleDelete}
               updateExpense={handleUpdate}
-              key={expense.id} // Add key prop for unique identification
+              key={expense.id}
             />
           ))}
         </div>
@@ -105,16 +147,59 @@ function MyExpense() {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            height: "85vh",
+            minHeight: "400px",
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '20px',
+            padding: '48px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <Typography>Haven't added any expense yet</Typography>
-          <Button variant="text" onClick={() => navigate("/add-expense")}>
-            Add New Expense
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 600,
+              color: 'rgba(255, 255, 255, 0.9)',
+              mb: 2,
+            }}
+          >
+            No Expenses Found
+          </Typography>
+          <Typography
+            sx={{
+              color: 'rgba(255, 255, 255, 0.7)',
+              mb: 3,
+              textAlign: 'center',
+            }}
+          >
+            Start tracking your expenses to see them here
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => navigate("/add-expense")}
+            sx={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '12px',
+              padding: '12px 24px',
+              fontSize: '1rem',
+              fontWeight: 600,
+              textTransform: 'none',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)',
+                transform: 'translateY(-1px)',
+              },
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Add Your First Expense
           </Button>
         </Box>
       )}
-    </div>
+      
+      {/* Quick Expense Entry */}
+      <QuickExpenseEntry onExpenseAdded={handleExpenseAdded} />
+    </Box>
   );
 }
 

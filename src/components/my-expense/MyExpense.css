@@ -1,6 +1,294 @@
 .my_expenses {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+  padding: 24px 0;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.expense-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.expense-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px 20px 0 0;
+}
+
+.expense-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+.expense-card .expense-header {
   display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.expense-card .expense-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.expense-card .expense-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #667eea;
+  margin: 0;
+  text-align: right;
+}
+
+.expense-card .expense-category {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: capitalize;
+}
+
+.expense-card .expense-description {
+  color: #4a5568;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  min-height: 40px;
+}
+
+.expense-card .expense-date {
+  color: #718096;
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.expense-card .expense-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.expense-card .action-button {
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: none;
+  transition: all 0.3s ease;
+  min-width: 80px;
+}
+
+.expense-card .edit-button {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.expense-card .edit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(72, 187, 120, 0.4);
+}
+
+.expense-card .delete-button {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+}
+
+.expense-card .delete-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(245, 101, 101, 0.4);
+}
+
+/* Currency indicator */
+.expense-card .currency-indicator {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Recurring indicator */
+.expense-card .recurring-indicator {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255, 193, 7, 0.1);
+  color: #f59e0b;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .my_expenses {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px 0;
+  }
+  
+  .expense-card {
+    padding: 20px;
+    border-radius: 16px;
+  }
+  
+  .expense-card .expense-title {
+    font-size: 1.125rem;
+  }
+  
+  .expense-card .expense-amount {
+    font-size: 1.25rem;
+  }
+  
+  .expense-card .expense-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .expense-card .action-button {
+    width: 100%;
+    padding: 10px 16px;
+  }
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
   justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 24px 0;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 64px 32px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 32px 0;
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 24px;
+}
+
+.empty-state-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 12px;
+}
+
+.empty-state-description {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 24px;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .expense-card {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .expense-card .expense-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .expense-card .expense-description {
+  color: #cbd5e0;
+}
+
+[data-theme="dark"] .expense-card .expense-date {
+  color: #a0aec0;
+}
+
+[data-theme="dark"] .expense-card .expense-actions {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .loading-container,
+[data-theme="dark"] .empty-state {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger animation for cards */
+.expense-card:nth-child(1) { animation-delay: 0.1s; }
+.expense-card:nth-child(2) { animation-delay: 0.2s; }
+.expense-card:nth-child(3) { animation-delay: 0.3s; }
+.expense-card:nth-child(4) { animation-delay: 0.4s; }
+.expense-card:nth-child(5) { animation-delay: 0.5s; }
+.expense-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Hover effects for interactive elements */
+.expense-card .expense-category:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+.expense-card .currency-indicator:hover,
+.expense-card .recurring-indicator:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
 }
