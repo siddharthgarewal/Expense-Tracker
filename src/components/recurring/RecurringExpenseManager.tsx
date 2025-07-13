@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -15,11 +15,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Switch,
-  FormControlLabel,
   IconButton,
   Chip,
   Alert,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, CalendarToday } from '@mui/icons-material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -28,7 +28,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { ExpenseService } from '../../services/expense.service';
 import { useUserAuth } from '../context/UserAuthContext';
 import { useSnackbar } from 'notistack';
-import { RecurringExpense, categories, frequencyOptions } from '../add-expense-form/expenseForm.type';
+import { RecurringExpense, categories } from '../add-expense-form/expenseForm.type';
 
 const RecurringExpenseManager: React.FC = () => {
   const [recurringExpenses, setRecurringExpenses] = useState<RecurringExpense[]>([]);
@@ -44,16 +44,19 @@ const RecurringExpenseManager: React.FC = () => {
     price: '',
     category: '',
     description: '',
-    frequency: 'monthly' as 'weekly' | 'monthly' | 'yearly',
+    frequency: 'monthly' as 'monthly' | 'yearly' | 'weekly' | 'daily',
     nextDueDate: dayjs() as Dayjs,
     isActive: true,
   });
 
-  useEffect(() => {
-    loadRecurringExpenses();
-  }, []);
+  const frequencyOptions = [
+    { value: 'daily', label: 'Daily' },
+    { value: 'weekly', label: 'Weekly' },
+    { value: 'monthly', label: 'Monthly' },
+    { value: 'yearly', label: 'Yearly' },
+  ];
 
-  const loadRecurringExpenses = async () => {
+  const loadRecurringExpenses = useCallback(async () => {
     try {
       setLoading(true);
       const snapshot = await expenseService.getRecurringExpenses(user);
@@ -69,7 +72,11 @@ const RecurringExpenseManager: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, expenseService, enqueueSnackbar]);
+
+  useEffect(() => {
+    loadRecurringExpenses();
+  }, [loadRecurringExpenses]);
 
   const handleSubmit = async () => {
     try {
@@ -78,7 +85,10 @@ const RecurringExpenseManager: React.FC = () => {
         price: parseFloat(formData.price),
         category: formData.category,
         description: formData.description,
-        frequency: formData.frequency,
+        // Only allow 'monthly', 'yearly', or 'weekly' for frequency to match RecurringExpense type
+        frequency: (['monthly', 'yearly', 'weekly'].includes(formData.frequency)
+          ? formData.frequency
+          : 'monthly') as 'monthly' | 'yearly' | 'weekly',
         nextDueDate: formData.nextDueDate.toDate(),
         isActive: formData.isActive,
         userId: user?.email ?? '',
@@ -170,13 +180,6 @@ const RecurringExpenseManager: React.FC = () => {
     
     if (daysDiff < 0) return Math.abs(daysDiff);
     return daysDiff;
-  };
-
-  const getDueStatusColor = (expense: RecurringExpense) => {
-    const daysUntilDue = getDaysUntilDue(expense);
-    if (daysUntilDue === 0) return 'error';
-    if (daysUntilDue <= 7) return 'warning';
-    return 'success';
   };
 
   return (

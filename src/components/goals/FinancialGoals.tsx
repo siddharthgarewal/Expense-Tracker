@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -53,11 +53,7 @@ const FinancialGoals: React.FC = () => {
     { value: 'spending-limit', label: 'Spending Limit', color: 'warning' },
   ];
 
-  useEffect(() => {
-    loadGoals();
-  }, []);
-
-  const loadGoals = async () => {
+  const loadGoals = useCallback(async () => {
     try {
       setLoading(true);
       const snapshot = await expenseService.getGoals(user);
@@ -73,7 +69,11 @@ const FinancialGoals: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, expenseService, enqueueSnackbar]);
+
+  useEffect(() => {
+    loadGoals();
+  }, [loadGoals]);
 
   const handleSubmit = async () => {
     try {

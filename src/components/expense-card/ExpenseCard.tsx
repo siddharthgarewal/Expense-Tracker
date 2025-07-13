@@ -7,16 +7,6 @@ import DialogActions from "@mui/material/DialogActions";
 import ExpenseForm from "../add-expense-form/ExpenseForm";
 import { ExpenseService } from "../../services/expense.service";
 import { useSnackbar } from "notistack";
-import { useUserAuth } from "../context/UserAuthContext";
-import { 
-  CalendarToday, 
-  Edit as EditIcon, 
-  Delete as DeleteIcon,
-  Repeat as RepeatIcon,
-  AttachMoney as MoneyIcon
-} from "@mui/icons-material";
-import dayjs from "dayjs";
-import { currencies } from "../add-expense-form/expenseForm.type";
 
 interface ExpenseCardProps {
   expense: any;
@@ -28,7 +18,6 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
   const [open, setOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  const { user } = useUserAuth();
   const expenseService = new ExpenseService();
 
   const handleClose = () => {
@@ -57,44 +46,11 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
       .catch((err) => enqueueSnackbar(err, { variant: "error" }));
   };
 
-  const formatDate = (date: any) => {
-    const jsDate = new Date(date.seconds * 1000 + date.nanoseconds / 1000000);
-    return dayjs(jsDate).format("MMM DD, YYYY");
-  };
-
-  const getCurrencySymbol = (currencyCode: string) => {
-    const currency = currencies.find(c => c.code === currencyCode);
-    return currency?.symbol || currencyCode;
-  };
-
-  const formatAmount = (amount: number, currency: string = 'USD') => {
-    const symbol = getCurrencySymbol(currency);
-    return `${symbol}${amount.toFixed(2)}`;
-  };
-
   return (
     <div className="expense-card">
-      {/* Currency indicator */}
-      {expense.currency && expense.currency !== 'USD' && (
-        <div className="currency-indicator">
-          <MoneyIcon sx={{ fontSize: '0.75rem' }} />
-          {expense.currency}
-        </div>
-      )}
-
-      {/* Recurring indicator */}
-      {expense.isRecurring && (
-        <div className="recurring-indicator">
-          <RepeatIcon sx={{ fontSize: '0.75rem' }} />
-          {expense.frequency}
-        </div>
-      )}
-
       <div className="expense-header">
         <h3 className="expense-title">{expense.expenseName}</h3>
-        <p className="expense-amount">
-          {formatAmount(parseFloat(expense.price), expense.currency)}
-        </p>
+        <p className="expense-amount">${expense.price}</p>
       </div>
 
       <span className="expense-category">{expense.category}</span>
@@ -104,21 +60,18 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
       )}
 
       <div className="expense-date">
-        <CalendarToday sx={{ fontSize: '1rem' }} />
-        {formatDate(expense.date)}
+        {new Date(expense.date.seconds * 1000).toLocaleDateString()}
       </div>
 
       <div className="expense-actions">
         <Button
           className="action-button edit-button"
-          startIcon={<EditIcon />}
           onClick={() => setOpen(true)}
         >
           Edit
         </Button>
         <Button
           className="action-button delete-button"
-          startIcon={<DeleteIcon />}
           onClick={() => setDeleteDialogOpen(true)}
         >
           Delete
@@ -131,26 +84,8 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
         onClose={handleClose}
         maxWidth="sm"
         fullWidth
-        PaperProps={{
-          sx: {
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '20px',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-          }
-        }}
       >
-        <DialogTitle sx={{ 
-          textAlign: 'center',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          fontWeight: 700,
-        }}>
-          Edit Expense
-        </DialogTitle>
+        <DialogTitle>Edit Expense</DialogTitle>
         <DialogContent>
           <ExpenseForm
             isEditForm={true}
@@ -167,70 +102,16 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
         onClose={() => setDeleteDialogOpen(false)}
         maxWidth="xs"
         fullWidth
-        PaperProps={{
-          sx: {
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '20px',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-          }
-        }}
       >
-        <DialogTitle sx={{ 
-          textAlign: 'center',
-          color: '#e53e3e',
-          fontWeight: 700,
-        }}>
-          Confirm Delete
-        </DialogTitle>
+        <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
-          <p style={{ 
-            textAlign: 'center',
-            color: '#4a5568',
-            fontSize: '1rem',
-            margin: '16px 0',
-          }}>
-            Are you sure you want to delete "{expense.expenseName}"?
-            <br />
-            <strong>This action cannot be undone.</strong>
-          </p>
+          <p>Are you sure you want to delete "{expense.expenseName}"?</p>
         </DialogContent>
-        <DialogActions sx={{ 
-          padding: '16px 24px 24px',
-          justifyContent: 'center',
-          gap: '12px',
-        }}>
-          <Button
-            onClick={() => setDeleteDialogOpen(false)}
-            variant="outlined"
-            sx={{
-              borderRadius: '12px',
-              padding: '8px 24px',
-              fontWeight: 600,
-              textTransform: 'none',
-            }}
-          >
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>
             Cancel
           </Button>
-          <Button
-            onClick={handleDelete}
-            variant="contained"
-            color="error"
-            sx={{
-              borderRadius: '12px',
-              padding: '8px 24px',
-              fontWeight: 600,
-              textTransform: 'none',
-              background: 'linear-gradient(135deg, #f56565 0%, #e53e3e 100%)',
-              boxShadow: '0 4px 12px rgba(245, 101, 101, 0.3)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #e53e3e 0%, #c53030 100%)',
-                boxShadow: '0 6px 16px rgba(245, 101, 101, 0.4)',
-                transform: 'translateY(-1px)',
-              },
-            }}
-          >
+          <Button onClick={handleDelete} color="error">
             Delete
           </Button>
         </DialogActions>

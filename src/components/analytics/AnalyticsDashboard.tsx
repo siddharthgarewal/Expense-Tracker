@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -25,7 +25,7 @@ import {
   Legend,
   ArcElement,
 } from 'chart.js';
-import { Bar, Pie, Doughnut } from 'react-chartjs-2';
+import { Bar, Doughnut } from 'react-chartjs-2';
 import { ExpenseService } from '../../services/expense.service';
 import { useUserAuth } from '../context/UserAuthContext';
 import { useSnackbar } from 'notistack';
@@ -71,13 +71,7 @@ const AnalyticsDashboard: React.FC = () => {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  useEffect(() => {
-    if (user) {
-      loadAnalytics();
-    }
-  }, [selectedYear, selectedMonth, user]);
-
-  const loadAnalytics = async () => {
+  const loadAnalytics = useCallback(async () => {
     try {
       setLoading(true);
       console.log('Loading analytics for user:', user?.email, 'Year:', selectedYear, 'Month:', selectedMonth);
@@ -106,7 +100,13 @@ const AnalyticsDashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, selectedYear, selectedMonth]);
+
+  useEffect(() => {
+    if (user) {
+      loadAnalytics();
+    }
+  }, [user, loadAnalytics]);
 
   const categoryChartData = {
     labels: Object.keys(categoryData || {}),
