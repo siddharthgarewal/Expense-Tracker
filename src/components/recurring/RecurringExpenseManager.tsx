@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   Card,
   CardContent,
@@ -37,7 +37,9 @@ const RecurringExpenseManager: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useUserAuth();
   const { enqueueSnackbar } = useSnackbar();
-  const expenseService = new ExpenseService();
+  const expenseService = useMemo(() => new ExpenseService(), []);
+  const enqueueSnackbarRef = useRef(enqueueSnackbar);
+  enqueueSnackbarRef.current = enqueueSnackbar;
 
   const [formData, setFormData] = useState({
     expenseName: '',
@@ -68,11 +70,11 @@ const RecurringExpenseManager: React.FC = () => {
       
       setRecurringExpenses(expenses);
     } catch (error) {
-      enqueueSnackbar('Failed to load recurring expenses', { variant: 'error' });
+      enqueueSnackbarRef.current('Failed to load recurring expenses', { variant: 'error' });
     } finally {
       setLoading(false);
     }
-  }, [user, expenseService, enqueueSnackbar]);
+  }, [user, expenseService]);
 
   useEffect(() => {
     loadRecurringExpenses();

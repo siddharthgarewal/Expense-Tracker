@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   Card,
   CardContent,
@@ -36,7 +36,9 @@ const FinancialGoals: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useUserAuth();
   const { enqueueSnackbar } = useSnackbar();
-  const expenseService = new ExpenseService();
+  const expenseService = useMemo(() => new ExpenseService(), []);
+  const enqueueSnackbarRef = useRef(enqueueSnackbar);
+  enqueueSnackbarRef.current = enqueueSnackbar;
 
   const [formData, setFormData] = useState({
     name: '',
@@ -65,11 +67,11 @@ const FinancialGoals: React.FC = () => {
       
       setGoals(goalsData);
     } catch (error) {
-      enqueueSnackbar('Failed to load financial goals', { variant: 'error' });
+      enqueueSnackbarRef.current('Failed to load financial goals', { variant: 'error' });
     } finally {
       setLoading(false);
     }
-  }, [user, expenseService, enqueueSnackbar]);
+  }, [user, expenseService]);
 
   useEffect(() => {
     loadGoals();
