@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import {
   Card,
   CardContent,
@@ -62,7 +62,9 @@ const AnalyticsDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useUserAuth();
   const { enqueueSnackbar } = useSnackbar();
-  const expenseService = new ExpenseService();
+  const expenseService = useMemo(() => new ExpenseService(), []);
+  const enqueueSnackbarRef = useRef(enqueueSnackbar);
+  enqueueSnackbarRef.current = enqueueSnackbar;
   const theme = useTheme();
 
   const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
@@ -96,11 +98,11 @@ const AnalyticsDashboard: React.FC = () => {
       setCategoryData(categoryBreakdown);
     } catch (error) {
       console.error('Analytics error:', error);
-      enqueueSnackbar('Failed to load analytics data', { variant: 'error' });
+      enqueueSnackbarRef.current('Failed to load analytics data', { variant: 'error' });
     } finally {
       setLoading(false);
     }
-  }, [user, selectedYear, selectedMonth]);
+  }, [user, selectedYear, selectedMonth, expenseService]);
 
   useEffect(() => {
     if (user) {

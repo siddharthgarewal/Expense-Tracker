@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import {
   Card,
   CardContent,
@@ -33,7 +33,9 @@ const BudgetManager: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useUserAuth();
   const { enqueueSnackbar } = useSnackbar();
-  const expenseService = new ExpenseService();
+  const expenseService = useMemo(() => new ExpenseService(), []);
+  const enqueueSnackbarRef = useRef(enqueueSnackbar);
+  enqueueSnackbarRef.current = enqueueSnackbar;
 
   const [formData, setFormData] = useState({
     category: '',
@@ -76,11 +78,11 @@ const BudgetManager: React.FC = () => {
       }
       setBudgetSpending(spendingData);
     } catch (error) {
-      enqueueSnackbar('Failed to load budgets', { variant: 'error' });
+      enqueueSnackbarRef.current('Failed to load budgets', { variant: 'error' });
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [expenseService, user]);
 
   useEffect(() => {
     loadBudgets();

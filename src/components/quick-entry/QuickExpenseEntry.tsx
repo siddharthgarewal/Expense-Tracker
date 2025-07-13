@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   SpeedDial,
   SpeedDialAction,
@@ -36,7 +36,7 @@ const QuickExpenseEntry: React.FC<QuickExpenseEntryProps> = ({ onExpenseAdded })
   const [recentExpenses, setRecentExpenses] = useState<string[]>([]);
   const { user } = useUserAuth();
   const { enqueueSnackbar } = useSnackbar();
-  const expenseService = new ExpenseService();
+  const expenseService = useMemo(() => new ExpenseService(), []);
 
   // Smart suggestions based on expense name
   const getSmartSuggestions = (expenseName: string) => {
