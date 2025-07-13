@@ -1,19 +1,221 @@
 .formContainer {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.formContainer h2 {
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.formContainer form {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  align-items: center;
-  width: 50%;
+  gap: 20px;
+}
+
+.formContainer .MuiTextField-root,
+.formContainer .MuiFormControl-root {
+  margin: 0;
+}
+
+.formContainer .MuiTextField-root .MuiOutlinedInput-root,
+.formContainer .MuiFormControl-root .MuiOutlinedInput-root {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.formContainer .MuiTextField-root .MuiOutlinedInput-root:hover,
+.formContainer .MuiFormControl-root .MuiOutlinedInput-root:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.formContainer .MuiTextField-root .MuiOutlinedInput-root.Mui-focused,
+.formContainer .MuiFormControl-root .MuiOutlinedInput-root.Mui-focused {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+}
+
+.formContainer .MuiButton-root {
+  margin-top: 24px;
+  padding: 12px 32px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.formContainer .MuiButton-root:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.formContainer .MuiButton-root:active {
+  transform: translateY(0);
 }
 
 .edit-buttons {
   display: flex;
+  gap: 16px;
   justify-content: flex-end;
-  gap: 10px;
+  margin-top: 24px;
 }
 
-@media (max-width: 577px) {
+.edit-buttons .MuiButton-root {
+  margin-top: 0;
+  padding: 8px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-transform: none;
+  transition: all 0.3s ease;
+}
+
+.edit-buttons .MuiButton-outlined {
+  border: 2px solid;
+  background: transparent;
+  box-shadow: none;
+}
+
+.edit-buttons .MuiButton-outlined:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.edit-buttons .MuiButton-contained {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.edit-buttons .MuiButton-contained:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+/* Form field animations */
+.formContainer .MuiTextField-root,
+.formContainer .MuiFormControl-root {
+  animation: slideIn 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.formContainer .MuiTextField-root:nth-child(1) { animation-delay: 0.1s; }
+.formContainer .MuiTextField-root:nth-child(2) { animation-delay: 0.2s; }
+.formContainer .MuiFormControl-root:nth-child(3) { animation-delay: 0.3s; }
+.formContainer .MuiTextField-root:nth-child(4) { animation-delay: 0.4s; }
+.formContainer .MuiTextField-root:nth-child(5) { animation-delay: 0.5s; }
+.formContainer .MuiFormGroup-root:nth-child(6) { animation-delay: 0.6s; }
+
+/* Switch styling */
+.formContainer .MuiSwitch-root {
+  margin: 8px 0;
+}
+
+.formContainer .MuiSwitch-root .MuiSwitch-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.formContainer .MuiSwitch-root .MuiSwitch-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.formContainer .MuiSwitch-root.Mui-checked .MuiSwitch-track {
+  background: rgba(102, 126, 234, 0.3);
+}
+
+/* Checkbox styling */
+.formContainer .MuiCheckbox-root {
+  color: #667eea;
+}
+
+.formContainer .MuiCheckbox-root.Mui-checked {
+  color: #667eea;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
   .formContainer {
-    width: 80%;
+    margin: 16px;
+    padding: 24px;
+    border-radius: 16px;
+  }
+  
+  .formContainer h2 {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+  }
+  
+  .edit-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .edit-buttons .MuiButton-root {
+    width: 100%;
+  }
+}
+
+/* Dark mode support */
+[data-theme="dark"] .formContainer {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .formContainer .MuiTextField-root .MuiOutlinedInput-root,
+[data-theme="dark"] .formContainer .MuiFormControl-root .MuiOutlinedInput-root {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+[data-theme="dark"] .formContainer .MuiTextField-root .MuiOutlinedInput-root:hover,
+[data-theme="dark"] .formContainer .MuiFormControl-root .MuiOutlinedInput-root:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .formContainer .MuiTextField-root .MuiOutlinedInput-root.Mui-focused,
+[data-theme="dark"] .formContainer .MuiFormControl-root .MuiOutlinedInput-root.Mui-focused {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

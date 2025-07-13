@@ -9,7 +9,12 @@ import { useSnackbar } from "notistack";
 import SignUp from "./components/auth/SignUp";
 import SignIn from "./components/auth/SignIn";
 import { UserAuthContextProvider } from "./components/context/UserAuthContext";
+import { CustomThemeProvider } from "./components/context/ThemeContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import AnalyticsDashboard from "./components/analytics/AnalyticsDashboard";
+import BudgetManager from "./components/budget/BudgetManager";
+import RecurringExpenseManager from "./components/recurring/RecurringExpenseManager";
+import FinancialGoals from "./components/goals/FinancialGoals";
 
 function App() {
   const expense = new ExpenseService();
@@ -25,33 +30,67 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <UserAuthContextProvider>
-        <Header />
-        <div className="subpart">
-          <Routes>
-            <Route path="/" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route
-              path="/add-expense"
-              element={
-                <ProtectedRoute>
-                  <ExpenseForm sendFormData={handleExpenseSubmit} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/my-expense"
-              element={
-                <ProtectedRoute>
-                  <MyExpense />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </div>
-      </UserAuthContextProvider>
-    </div>
+    <CustomThemeProvider>
+      <div className="App">
+        <UserAuthContextProvider>
+          <Header />
+          <div className="subpart">
+            <Routes>
+              <Route path="/" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route
+                path="/add-expense"
+                element={
+                  <ProtectedRoute>
+                    <ExpenseForm sendFormData={handleExpenseSubmit} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/my-expense"
+                element={
+                  <ProtectedRoute>
+                    <MyExpense />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/analytics"
+                element={
+                  <ProtectedRoute>
+                    <AnalyticsDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/budgets"
+                element={
+                  <ProtectedRoute>
+                    <BudgetManager />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/recurring"
+                element={
+                  <ProtectedRoute>
+                    <RecurringExpenseManager />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/goals"
+                element={
+                  <ProtectedRoute>
+                    <FinancialGoals />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </UserAuthContextProvider>
+      </div>
+    </CustomThemeProvider>
   );
 }
 

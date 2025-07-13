@@ -8,6 +8,7 @@ import {
   Select,
   TextField,
   Box,
+  Typography,
 } from "@mui/material";
 
 interface ExpenseOptionsPropType {
@@ -66,17 +67,40 @@ function ExpenseOptions({
   };
 
   return (
-    <Grid
-      container
-      spacing={2}
-      alignItems="center"
-      justifyContent="center"
-      mb={3}
+    <Box
+      sx={{
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        borderRadius: '20px',
+        padding: '24px',
+        marginBottom: '24px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+      }}
     >
-      <Grid item>
-        <Box sx={{ minWidth: 120 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          fontWeight: 600,
+          color: 'rgba(255, 255, 255, 0.9)',
+          mb: 2,
+          textAlign: 'center',
+        }}
+      >
+        Filter & Search Expenses
+      </Typography>
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Grid item xs={12} sm={4}>
           <FormControl fullWidth>
-            <InputLabel id="sort-by-label" style={{ width: "100%" }}>
+            <InputLabel 
+              id="sort-by-label"
+              sx={{ color: 'rgba(255, 255, 255, 0.8)' }}
+            >
               Sort By
             </InputLabel>
             <Select
@@ -85,6 +109,18 @@ function ExpenseOptions({
               value={sortBy}
               onChange={handleSortChange}
               label="Sort By"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: '12px',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.15)',
+                  },
+                },
+                '& .MuiSelect-icon': {
+                  color: 'rgba(255, 255, 255, 0.8)',
+                },
+              }}
             >
               <MenuItem value="new_date">Newest to Oldest Date</MenuItem>
               <MenuItem value="old_date">Oldest to Newest Date</MenuItem>
@@ -92,24 +128,58 @@ function ExpenseOptions({
               <MenuItem value="low_price">Low to High Price</MenuItem>
             </Select>
           </FormControl>
-        </Box>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            id="outlined-basic"
+            label="Search"
+            variant="outlined"
+            fullWidth
+            placeholder="Search expenses by name"
+            onChange={handleSearchInputChange}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '12px',
+                '&:hover': {
+                  background: 'rgba(255, 255, 255, 0.15)',
+                },
+                '&.Mui-focused': {
+                  background: 'rgba(255, 255, 255, 0.2)',
+                },
+              },
+              '& .MuiInputLabel-root': {
+                color: 'rgba(255, 255, 255, 0.8)',
+              },
+              '& .MuiInputBase-input': {
+                color: 'rgba(255, 255, 255, 0.9)',
+              },
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <Button 
+            variant="contained" 
+            onClick={handleSearch}
+            sx={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '12px',
+              padding: '12px 24px',
+              fontWeight: 600,
+              textTransform: 'none',
+              width: '100%',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)',
+                transform: 'translateY(-1px)',
+              },
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Search
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item>
-        <TextField
-          id="outlined-basic"
-          label="Search"
-          variant="outlined"
-          fullWidth
-          placeholder="Search expenses by name"
-          onChange={handleSearchInputChange}
-        />
-      </Grid>
-      <Grid item>
-        <Button variant="text" color="primary" onClick={handleSearch}>
-          Apply
-        </Button>
-      </Grid>
-    </Grid>
+    </Box>
   );
 }
 
