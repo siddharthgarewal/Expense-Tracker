@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   SpeedDial,
   SpeedDialAction,
@@ -14,7 +14,7 @@ import {
   Typography,
   Chip,
 } from '@mui/material';
-import { Add as AddIcon, Receipt as ReceiptIcon, LocalDining as FoodIcon, DirectionsCar as TransportIcon } from '@mui/icons-material';
+import { Receipt as ReceiptIcon, LocalDining as FoodIcon, DirectionsCar as TransportIcon } from '@mui/icons-material';
 import { ExpenseService } from '../../services/expense.service';
 import { useUserAuth } from '../context/UserAuthContext';
 import { useSnackbar } from 'notistack';
@@ -85,19 +85,20 @@ const QuickExpenseEntry: React.FC<QuickExpenseEntryProps> = ({ onExpenseAdded })
     return '';
   };
 
-  useEffect(() => {
-    loadRecentExpenses();
-  }, []);
-
-  const loadRecentExpenses = async () => {
+  const loadRecentExpenses = useCallback(async () => {
     try {
-      const snapshot = await expenseService.getRecentExpenses(user, 10);
+      const snapshot = await expenseService.getAllExpense(user);
       const expenses = snapshot.docs.map(doc => doc.data().expenseName);
-      setRecentExpenses(expenses);
+      const uniqueExpenses = Array.from(new Set(expenses)).slice(0, 5);
+      setRecentExpenses(uniqueExpenses);
     } catch (error) {
       console.error('Failed to load recent expenses:', error);
     }
-  };
+  }, [user, expenseService]);
+
+  useEffect(() => {
+    loadRecentExpenses();
+  }, [loadRecentExpenses]);
 
   const handleSubmit = async () => {
     if (!formData.expenseName || !formData.price || !formData.category) {

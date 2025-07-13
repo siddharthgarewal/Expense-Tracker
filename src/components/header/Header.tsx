@@ -9,10 +9,8 @@ import {
   MenuItem,
   Button,
   Avatar,
-  Chip,
   useTheme as useMuiTheme,
 } from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";

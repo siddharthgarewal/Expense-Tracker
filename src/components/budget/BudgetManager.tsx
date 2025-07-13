@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -42,22 +42,18 @@ const BudgetManager: React.FC = () => {
     currency: 'USD',
   });
 
-  useEffect(() => {
-    loadBudgets();
-  }, []);
-
-  const loadBudgets = async () => {
+  const loadBudgets = useCallback(async () => {
     try {
       setLoading(true);
-      const budgetsSnapshot = await expenseService.getBudgets(user);
-      const budgetsData = budgetsSnapshot.docs.map(doc => ({
+      const snapshot = await expenseService.getBudgets(user);
+      const budgetsData = snapshot.docs.map(doc => ({
         ...doc.data(),
         id: doc.id,
       })) as BudgetData[];
-
+      
       setBudgets(budgetsData);
-
-      // Calculate spending for each budget
+      
+      // Load spending data for each budget
       const spendingData: Record<string, number> = {};
       for (const budget of budgetsData) {
         const currentDate = new Date();
@@ -78,14 +74,17 @@ const BudgetManager: React.FC = () => {
         
         spendingData[budget.id!] = categoryExpenses;
       }
-      
       setBudgetSpending(spendingData);
     } catch (error) {
       enqueueSnackbar('Failed to load budgets', { variant: 'error' });
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadBudgets();
+  }, [loadBudgets]);
 
   const handleSubmit = async () => {
     try {
