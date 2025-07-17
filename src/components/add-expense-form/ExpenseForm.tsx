@@ -35,7 +35,7 @@ const ExpenseForm = ({
     date: null,
     isRecurring: false,
     frequency: "monthly",
-    currency: "USD",
+    currency: "INR",
   });
   const { user } = useUserAuth();
   const theme = useTheme();
@@ -56,7 +56,7 @@ const ExpenseForm = ({
       date: null,
       isRecurring: false,
       frequency: "monthly",
-      currency: "USD",
+      currency: "INR",
     });
   };
 
@@ -94,7 +94,7 @@ const ExpenseForm = ({
         date: formattedDate,
         isRecurring: isRecurring || false,
         frequency: frequency || "monthly",
-        currency: currency || "USD",
+        currency: currency || "INR",
       });
     }
   }, [initialExpenseValue]);

@@ -39,6 +39,7 @@ import {
   CalendarToday,
   MonetizationOn
 } from '@mui/icons-material';
+import { getCurrencySymbol } from '../add-expense-form/expenseForm.type';
 
 ChartJS.register(
   CategoryScale,
@@ -144,6 +145,9 @@ const AnalyticsDashboard: React.FC = () => {
       },
     ],
   };
+
+  // Find the most common or selected currency from the data, or default to USD
+  const detectedCurrency = (monthlyData && monthlyData.currency) || (categoryData && categoryData.currency) || 'INR';
 
   if (loading) {
     return (
@@ -313,7 +317,7 @@ const AnalyticsDashboard: React.FC = () => {
                     Total Spent This Month
                   </Typography>
                   <Typography variant="h4" sx={{ fontWeight: 700, color: '#667eea' }}>
-                    ${monthlyData?.totalAmount?.toFixed(2) || '0.00'}
+                    {getCurrencySymbol(detectedCurrency)}{monthlyData?.totalAmount?.toFixed(2) || '0.00'}
                   </Typography>
                 </Box>
               </Box>
@@ -359,7 +363,7 @@ const AnalyticsDashboard: React.FC = () => {
                     Average per Expense
                   </Typography>
                   <Typography variant="h4" sx={{ fontWeight: 700, color: '#f59e0b' }}>
-                    ${monthlyData?.expenseCount > 0 
+                    {monthlyData?.expenseCount > 0 
                       ? (monthlyData.totalAmount / monthlyData.expenseCount).toFixed(2) 
                       : '0.00'}
                   </Typography>
@@ -622,7 +626,7 @@ const AnalyticsDashboard: React.FC = () => {
             {Object.entries(categoryData).map(([category, amount]) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={category}>
                 <Chip
-                  label={`${category}: $${(amount as number).toFixed(2)}`}
+                  label={`${category}: ${getCurrencySymbol(detectedCurrency)}${(amount as number).toFixed(2)}`}
                   sx={{
                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     color: 'white',

@@ -15,6 +15,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../../firebase";
+import Loader from "../loader/Loader";
 
 interface UserAuthContextType {
   user: User | null;
@@ -90,7 +91,7 @@ export const UserAuthContextProvider = ({
   }
 
   if (pending) {
-    return <>Loading...</>;
+    return <Loader />;
   }
 
   return (

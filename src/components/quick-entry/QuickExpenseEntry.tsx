@@ -31,7 +31,7 @@ const QuickExpenseEntry: React.FC<QuickExpenseEntryProps> = ({ onExpenseAdded })
     expenseName: '',
     price: '',
     category: '',
-    currency: 'USD',
+    currency: 'INR',
   });
   const [recentExpenses, setRecentExpenses] = useState<string[]>([]);
   const { user } = useUserAuth();
@@ -113,7 +113,7 @@ const QuickExpenseEntry: React.FC<QuickExpenseEntryProps> = ({ onExpenseAdded })
         category: formData.category,
         description: '',
         date: dayjs().toDate(),
-        currency: formData.currency,
+        currency: formData.currency, // ensure currency is saved
         user: user?.email,
       };
 
@@ -133,7 +133,7 @@ const QuickExpenseEntry: React.FC<QuickExpenseEntryProps> = ({ onExpenseAdded })
       expenseName: '',
       price: '',
       category: '',
-      currency: 'USD',
+      currency: 'INR',
     });
   };
 
@@ -175,9 +175,6 @@ const QuickExpenseEntry: React.FC<QuickExpenseEntryProps> = ({ onExpenseAdded })
         ariaLabel="Quick expense entry"
         sx={{ position: 'fixed', bottom: 16, right: 16 }}
         icon={<SpeedDialIcon />}
-        open={open}
-        onOpen={() => setOpen(true)}
-        onClose={() => setOpen(false)}
       >
         {quickActions.map((action) => (
           <SpeedDialAction

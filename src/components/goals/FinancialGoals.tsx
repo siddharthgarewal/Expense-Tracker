@@ -46,7 +46,7 @@ const FinancialGoals: React.FC = () => {
     currentAmount: '',
     targetDate: dayjs().add(1, 'year') as Dayjs,
     type: 'savings' as 'savings' | 'debt-reduction' | 'spending-limit',
-    currency: 'USD',
+    currency: 'INR',
   });
 
   const goalTypes = [
@@ -148,7 +148,7 @@ const FinancialGoals: React.FC = () => {
       currentAmount: '',
       targetDate: dayjs().add(1, 'year'),
       type: 'savings',
-      currency: 'USD',
+      currency: 'INR',
     });
   };
 

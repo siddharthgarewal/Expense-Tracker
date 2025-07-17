@@ -28,7 +28,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { ExpenseService } from '../../services/expense.service';
 import { useUserAuth } from '../context/UserAuthContext';
 import { useSnackbar } from 'notistack';
-import { RecurringExpense, categories } from '../add-expense-form/expenseForm.type';
+import { RecurringExpense, categories, currencies } from '../add-expense-form/expenseForm.type';
 
 const RecurringExpenseManager: React.FC = () => {
   const [recurringExpenses, setRecurringExpenses] = useState<RecurringExpense[]>([]);
@@ -49,6 +49,7 @@ const RecurringExpenseManager: React.FC = () => {
     frequency: 'monthly' as 'monthly' | 'yearly' | 'weekly' | 'daily',
     nextDueDate: dayjs() as Dayjs,
     isActive: true,
+    currency: 'INR',
   });
 
   const frequencyOptions = [
@@ -93,6 +94,7 @@ const RecurringExpenseManager: React.FC = () => {
           : 'monthly') as 'monthly' | 'yearly' | 'weekly',
         nextDueDate: formData.nextDueDate.toDate(),
         isActive: formData.isActive,
+        currency: formData.currency,
         userId: user?.email ?? '',
         createdAt: new Date(),
       };
@@ -124,6 +126,7 @@ const RecurringExpenseManager: React.FC = () => {
       frequency: expense.frequency,
       nextDueDate: dayjs(expense.nextDueDate),
       isActive: expense.isActive,
+      currency: expense.currency || 'INR',
     });
     setOpenDialog(true);
   };
@@ -161,6 +164,7 @@ const RecurringExpenseManager: React.FC = () => {
       frequency: 'monthly',
       nextDueDate: dayjs(),
       isActive: true,
+      currency: 'INR',
     });
   };
 
@@ -377,6 +381,22 @@ const RecurringExpenseManager: React.FC = () => {
                   }}
                 />
               </LocalizationProvider>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Currency</InputLabel>
+                <Select
+                  value={formData.currency}
+                  label="Currency"
+                  onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                >
+                  {currencies.map((currency) => (
+                    <MenuItem key={currency.code} value={currency.code}>
+                      {currency.code} ({currency.symbol})
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
