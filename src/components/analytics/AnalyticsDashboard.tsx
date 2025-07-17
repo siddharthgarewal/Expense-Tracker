@@ -166,14 +166,40 @@ const AnalyticsDashboard: React.FC = () => {
   return (
     <Box className="fade-in">
       {/* Page Header */}
-      <Box className="page-header">
-        <Typography className="page-title">
-          Analytics Dashboard
-        </Typography>
-        <Typography className="page-subtitle" sx={{ color: theme.palette.text.secondary }}>
-          Track your spending patterns and financial insights
-        </Typography>
-      </Box>
+      <Box
+          sx={{
+            textAlign: 'center',
+            mb: 4,
+            padding: '32px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '20px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 700,
+              background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              mb: 1,
+            }}
+          >
+            Analytics Dashboard
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              color: 'rgba(255, 255, 255, 0.7)',
+            }}
+          >
+            Track your spending patterns and financial insights
+          </Typography>
+        </Box>
 
       {/* Filters */}
       <Paper className="modern-container">

@@ -12,6 +12,7 @@ import "./ExpenseForm.css";
 import { Checkbox, FormControlLabel, FormGroup, Grid, Switch, Box, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useUserAuth } from "../context/UserAuthContext";
+import { useTheme } from "@mui/material/styles";
 
 interface ExpenseFormPropType {
   isEditForm?: boolean;
@@ -37,6 +38,7 @@ const ExpenseForm = ({
     currency: "USD",
   });
   const { user } = useUserAuth();
+  const theme = useTheme();
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -172,20 +174,34 @@ const ExpenseForm = ({
             required
             sx={{
               '& .MuiOutlinedInput-root': {
-                background: 'rgba(255, 255, 255, 0.1)',
+                background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
                 borderRadius: '12px',
                 '&:hover': {
-                  background: 'rgba(255, 255, 255, 0.15)',
+                  background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,1)',
                 },
                 '&.Mui-focused': {
-                  background: 'rgba(255, 255, 255, 0.2)',
+                  background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,1)',
                 },
               },
               '& .MuiInputLabel-root': {
-                color: 'rgba(255, 255, 255, 0.8)',
+                color: theme.palette.text.primary,
+                background: 'transparent',
+                fontWeight: 500,
+                zIndex: 2,
+                padding: '0 4px',
+                transition: 'color 0.2s',
+              },
+              '& .MuiInputLabel-root.Mui-focused': {
+                color: theme.palette.primary.main,
+                background: theme.palette.mode === 'dark' ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.9)',
+                borderRadius: '4px',
+                padding: '0 4px',
               },
               '& .MuiInputBase-input': {
-                color: 'rgba(255, 255, 255, 0.9)',
+                color: theme.palette.text.primary,
+              },
+              '& .MuiFormHelperText-root': {
+                color: theme.palette.text.secondary,
               },
             }}
           />
@@ -202,11 +218,68 @@ const ExpenseForm = ({
             type="number"
             required
             inputProps={{ min: 0, step: 0.01 }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
+                borderRadius: '12px',
+                '&:hover': {
+                  background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,1)',
+                },
+                '&.Mui-focused': {
+                  background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,1)',
+                },
+              },
+              '& .MuiInputLabel-root': {
+                color: theme.palette.text.primary,
+                background: 'transparent',
+                fontWeight: 500,
+                zIndex: 2,
+                padding: '0 4px',
+                transition: 'color 0.2s',
+              },
+              '& .MuiInputLabel-root.Mui-focused': {
+                color: theme.palette.primary.main,
+                background: theme.palette.mode === 'dark' ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.9)',
+                borderRadius: '4px',
+                padding: '0 4px',
+              },
+              '& .MuiInputBase-input': {
+                color: theme.palette.text.primary,
+              },
+              '& .MuiFormHelperText-root': {
+                color: theme.palette.text.secondary,
+              },
+            }}
           />
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth margin="normal" sx={{
+            '& .MuiInputLabel-root': {
+              color: theme.palette.text.primary,
+              background: 'transparent',
+              fontWeight: 500,
+              zIndex: 2,
+              padding: '0 4px',
+              transition: 'color 0.2s',
+            },
+            '& .MuiInputLabel-root.Mui-focused': {
+              color: theme.palette.primary.main,
+              background: theme.palette.mode === 'dark' ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.9)',
+              borderRadius: '4px',
+              padding: '0 4px',
+            },
+            '& .MuiSelect-select': {
+              color: theme.palette.text.primary,
+              background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
+              borderRadius: '12px',
+              padding: '16.5px 14px',
+              fontSize: '1rem',
+            },
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'rgba(0,0,0,0.23)',
+            },
+          }}>
             <InputLabel id="currency-label">Currency</InputLabel>
             <Select
               labelId="currency-label"
@@ -215,6 +288,11 @@ const ExpenseForm = ({
               value={formData.currency}
               onChange={handleChange}
               label="Currency"
+              sx={{
+                background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
+                borderRadius: '12px',
+                color: theme.palette.text.primary,
+              }}
             >
               {currencies.map((currency) => (
                 <MenuItem key={currency.code} value={currency.code}>
@@ -226,7 +304,32 @@ const ExpenseForm = ({
         </Grid>
 
         <Grid item xs={12}>
-          <FormControl fullWidth>
+          <FormControl fullWidth sx={{
+            '& .MuiInputLabel-root': {
+              color: theme.palette.text.primary,
+              background: 'transparent',
+              fontWeight: 500,
+              zIndex: 2,
+              padding: '0 4px',
+              transition: 'color 0.2s',
+            },
+            '& .MuiInputLabel-root.Mui-focused': {
+              color: theme.palette.primary.main,
+              background: theme.palette.mode === 'dark' ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.9)',
+              borderRadius: '4px',
+              padding: '0 4px',
+            },
+            '& .MuiSelect-select': {
+              color: theme.palette.text.primary,
+              background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
+              borderRadius: '12px',
+              padding: '16.5px 14px',
+              fontSize: '1rem',
+            },
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'rgba(0,0,0,0.23)',
+            },
+          }}>
             <InputLabel id="category-label">Category</InputLabel>
             <Select
               labelId="category-label"
@@ -236,6 +339,11 @@ const ExpenseForm = ({
               onChange={handleChange}
               label="Category"
               required
+              sx={{
+                background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
+                borderRadius: '12px',
+                color: theme.palette.text.primary,
+              }}
             >
               {categories.map((category: string) => {
                 return (
@@ -258,6 +366,38 @@ const ExpenseForm = ({
             multiline
             rows={4}
             margin="normal"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
+                borderRadius: '12px',
+                '&:hover': {
+                  background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,1)',
+                },
+                '&.Mui-focused': {
+                  background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,1)',
+                },
+              },
+              '& .MuiInputLabel-root': {
+                color: theme.palette.text.primary,
+                background: 'transparent',
+                fontWeight: 500,
+                zIndex: 2,
+                padding: '0 4px',
+                transition: 'color 0.2s',
+              },
+              '& .MuiInputLabel-root.Mui-focused': {
+                color: theme.palette.primary.main,
+                background: theme.palette.mode === 'dark' ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.9)',
+                borderRadius: '4px',
+                padding: '0 4px',
+              },
+              '& .MuiInputBase-input': {
+                color: theme.palette.text.primary,
+              },
+              '& .MuiFormHelperText-root': {
+                color: theme.palette.text.secondary,
+              },
+            }}
           />
         </Grid>
 
@@ -270,6 +410,38 @@ const ExpenseForm = ({
                   helperText: "MM/DD/YYYY",
                   fullWidth: true,
                   margin: "normal",
+                  sx: {
+                    '& .MuiOutlinedInput-root': {
+                      background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
+                      borderRadius: '12px',
+                      '&:hover': {
+                        background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,1)',
+                      },
+                      '&.Mui-focused': {
+                        background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,1)',
+                      },
+                    },
+                    '& .MuiInputLabel-root': {
+                      color: theme.palette.text.primary,
+                      background: 'transparent',
+                      fontWeight: 500,
+                      zIndex: 2,
+                      padding: '0 4px',
+                      transition: 'color 0.2s',
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: theme.palette.primary.main,
+                      background: theme.palette.mode === 'dark' ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.9)',
+                      borderRadius: '4px',
+                      padding: '0 4px',
+                    },
+                    '& .MuiInputBase-input': {
+                      color: theme.palette.text.primary,
+                    },
+                    '& .MuiFormHelperText-root': {
+                      color: theme.palette.text.secondary,
+                    },
+                  },
                 },
               }}
               value={formData.date}
@@ -301,9 +473,35 @@ const ExpenseForm = ({
           </FormGroup>
         </Grid>
 
+        {/* Frequency field for recurring expenses */}
         {formData.isRecurring && (
           <Grid item xs={12}>
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{
+              '& .MuiInputLabel-root': {
+                color: theme.palette.text.primary,
+                background: 'transparent',
+                fontWeight: 500,
+                zIndex: 2,
+                padding: '0 4px',
+                transition: 'color 0.2s',
+              },
+              '& .MuiInputLabel-root.Mui-focused': {
+                color: theme.palette.primary.main,
+                background: theme.palette.mode === 'dark' ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.9)',
+                borderRadius: '4px',
+                padding: '0 4px',
+              },
+              '& .MuiSelect-select': {
+                color: theme.palette.text.primary,
+                background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
+                borderRadius: '12px',
+                padding: '16.5px 14px',
+                fontSize: '1rem',
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'rgba(0,0,0,0.23)',
+              },
+            }}>
               <InputLabel id="frequency-label">Frequency</InputLabel>
               <Select
                 labelId="frequency-label"
@@ -312,6 +510,11 @@ const ExpenseForm = ({
                 value={formData.frequency}
                 onChange={handleChange}
                 label="Frequency"
+                sx={{
+                  background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
+                  borderRadius: '12px',
+                  color: theme.palette.text.primary,
+                }}
               >
                 {frequencyOptions.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
@@ -337,11 +540,11 @@ const ExpenseForm = ({
               padding: '10px 24px',
               fontWeight: 600,
               textTransform: 'none',
-              borderColor: 'rgba(255, 255, 255, 0.3)',
-              color: 'rgba(255, 255, 255, 0.8)',
+              borderColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)',
+              color: theme.palette.mode === 'dark' ?'rgba(255, 255, 255, 0.3)' : '#667eea',
               '&:hover': {
-                borderColor: 'rgba(255, 255, 255, 0.5)',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                borderColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)',
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
               },
             }}
           >
@@ -392,9 +595,9 @@ const ExpenseForm = ({
           Add Expense
         </Button>
       )}
-        </Box>
       </Box>
-    );
+    </Box>
+  );
 };
 
 export default ExpenseForm;

@@ -15,6 +15,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../loader/Loader";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useTheme } from "@mui/material/styles";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -25,6 +26,7 @@ export default function SignUp() {
   const [loader, setLoader] = useState(false);
   const { signUp } = useUserAuth();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,7 +58,7 @@ export default function SignUp() {
         <Box
           sx={{
             width: '100%',
-            maxWidth: '450px',
+            maxWidth: '500px',
             background: 'rgba(255, 255, 255, 0.1)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -139,20 +141,34 @@ export default function SignUp() {
                   onChange={(e) => setFirstName(e.target.value)}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.1)',
                       borderRadius: '12px',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.15)',
+                        background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.15)',
                       },
                       '&.Mui-focused': {
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.2)',
                       },
                     },
                     '& .MuiInputLabel-root': {
-                      color: 'rgba(255, 255, 255, 0.8)',
+                      color: theme.palette.text.primary,
+                      background: 'transparent',
+                      fontWeight: 500,
+                      zIndex: 2,
+                      padding: '0 4px',
+                      transition: 'color 0.2s',
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: theme.palette.primary.main,
+                      background: theme.palette.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                      borderRadius: '4px',
+                      padding: '0 4px',
                     },
                     '& .MuiInputBase-input': {
-                      color: 'rgba(255, 255, 255, 0.9)',
+                      color: theme.palette.text.primary,
+                    },
+                    '& .MuiFormHelperText-root': {
+                      color: theme.palette.text.secondary,
                     },
                   }}
                 />
@@ -168,20 +184,34 @@ export default function SignUp() {
                   onChange={(e) => setLastName(e.target.value)}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.1)',
                       borderRadius: '12px',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.15)',
+                        background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.15)',
                       },
                       '&.Mui-focused': {
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.2)',
                       },
                     },
                     '& .MuiInputLabel-root': {
-                      color: 'rgba(255, 255, 255, 0.8)',
+                      color: theme.palette.text.primary,
+                      background: 'transparent',
+                      fontWeight: 500,
+                      zIndex: 2,
+                      padding: '0 4px',
+                      transition: 'color 0.2s',
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: theme.palette.primary.main,
+                      background: theme.palette.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                      borderRadius: '4px',
+                      padding: '0 4px',
                     },
                     '& .MuiInputBase-input': {
-                      color: 'rgba(255, 255, 255, 0.9)',
+                      color: theme.palette.text.primary,
+                    },
+                    '& .MuiFormHelperText-root': {
+                      color: theme.palette.text.secondary,
                     },
                   }}
                 />
@@ -197,20 +227,34 @@ export default function SignUp() {
                   onChange={(e) => setEmail(e.target.value)}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.1)',
                       borderRadius: '12px',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.15)',
+                        background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.15)',
                       },
                       '&.Mui-focused': {
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.2)',
                       },
                     },
                     '& .MuiInputLabel-root': {
-                      color: 'rgba(255, 255, 255, 0.8)',
+                      color: theme.palette.text.primary,
+                      background: 'transparent',
+                      fontWeight: 500,
+                      zIndex: 2,
+                      padding: '0 4px',
+                      transition: 'color 0.2s',
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: theme.palette.primary.main,
+                      background: theme.palette.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                      borderRadius: '4px',
+                      padding: '0 4px',
                     },
                     '& .MuiInputBase-input': {
-                      color: 'rgba(255, 255, 255, 0.9)',
+                      color: theme.palette.text.primary,
+                    },
+                    '& .MuiFormHelperText-root': {
+                      color: theme.palette.text.secondary,
                     },
                   }}
                 />
@@ -227,20 +271,34 @@ export default function SignUp() {
                   onChange={(e) => setPassword(e.target.value)}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.1)',
                       borderRadius: '12px',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.15)',
+                        background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.15)',
                       },
                       '&.Mui-focused': {
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.2)',
                       },
                     },
                     '& .MuiInputLabel-root': {
-                      color: 'rgba(255, 255, 255, 0.8)',
+                      color: theme.palette.text.primary,
+                      background: 'transparent',
+                      fontWeight: 500,
+                      zIndex: 2,
+                      padding: '0 4px',
+                      transition: 'color 0.2s',
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: theme.palette.primary.main,
+                      background: theme.palette.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                      borderRadius: '4px',
+                      padding: '0 4px',
                     },
                     '& .MuiInputBase-input': {
-                      color: 'rgba(255, 255, 255, 0.9)',
+                      color: theme.palette.text.primary,
+                    },
+                    '& .MuiFormHelperText-root': {
+                      color: theme.palette.text.secondary,
                     },
                   }}
                 />
@@ -251,16 +309,16 @@ export default function SignUp() {
                     <Checkbox 
                       value="allowExtraEmails" 
                       sx={{
-                        color: 'rgba(255, 255, 255, 0.6)',
+                        color: theme.palette.text.secondary,
                         '&.Mui-checked': {
-                          color: '#667eea',
+                          color: theme.palette.primary.main,
                         },
                       }}
                     />
                   }
                   label="I want to receive inspiration, marketing promotions and updates via email."
                   sx={{
-                    color: 'rgba(255, 255, 255, 0.8)',
+                    color: theme.palette.text.primary,
                     fontSize: '0.875rem',
                   }}
                 />
@@ -292,7 +350,7 @@ export default function SignUp() {
               <Grid item>
                 <Typography
                   sx={{
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    color: theme.palette.text.secondary,
                     fontSize: '0.875rem',
                   }}
                 >
@@ -300,12 +358,13 @@ export default function SignUp() {
                   <Link 
                     to="/"
                     style={{
-                      color: '#667eea',
+                      color: theme.palette.primary.main,
                       textDecoration: 'none',
                       fontWeight: 600,
+                      transition: 'color 0.2s',
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = '#5a67d8'}
-                    onMouseLeave={(e) => e.currentTarget.style.color = '#667eea'}
+                    onMouseEnter={(e) => e.currentTarget.style.color = theme.palette.primary.dark}
+                    onMouseLeave={(e) => e.currentTarget.style.color = theme.palette.primary.main}
                   >
                     Sign in here!
                   </Link>

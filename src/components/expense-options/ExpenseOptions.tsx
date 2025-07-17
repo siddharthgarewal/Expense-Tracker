@@ -10,6 +10,7 @@ import {
   Box,
   Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 interface ExpenseOptionsPropType {
   expenseData: any;
@@ -25,6 +26,7 @@ function ExpenseOptions({
   handleSearch,
 }: ExpenseOptionsPropType) {
   const [sortBy, setSortBy] = useState("new_date");
+  const theme = useTheme();
 
   const handleSortChange = (event: { target: { value: string } }) => {
     const value = event.target.value as string;
@@ -99,7 +101,14 @@ function ExpenseOptions({
           <FormControl fullWidth>
             <InputLabel 
               id="sort-by-label"
-              sx={{ color: 'rgba(255, 255, 255, 0.8)' }}
+              sx={{ 
+                color: 'white',
+                background: 'transparent',
+                fontWeight: 500,
+                zIndex: 2,
+                padding: '0 4px',
+                transition: 'color 0.2s',
+              }}
             >
               Sort By
             </InputLabel>
@@ -111,14 +120,41 @@ function ExpenseOptions({
               label="Sort By"
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  background: 'rgba(255, 255, 255, 0.1)',
+                  background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
                   '&:hover': {
-                    background: 'rgba(255, 255, 255, 0.15)',
+                    background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.15)',
+                  },
+                  '&.Mui-focused': {
+                    background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.2)',
                   },
                 },
+                '& .MuiInputLabel-root': {
+                  color: 'white',
+                  background: 'transparent',
+                  fontWeight: 500,
+                  zIndex: 2,
+                  padding: '0 4px',
+                  transition: 'color 0.2s',
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: theme.palette.mode === 'dark' ? theme.palette.primary.main : 'white',
+                  background: theme.palette.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                  borderRadius: '4px',
+                  padding: '0 4px',
+                },
+                '& .MuiSelect-select': {
+                  color: 'white',
+                  background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: '12px',
+                  padding: '16.5px 14px',
+                  fontSize: '1rem',
+                },
                 '& .MuiSelect-icon': {
-                  color: 'rgba(255, 255, 255, 0.8)',
+                  color: 'white',
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'rgba(0, 0, 0, 0.23)',
                 },
               }}
             >
@@ -139,20 +175,34 @@ function ExpenseOptions({
             onChange={handleSearchInputChange}
             sx={{
               '& .MuiOutlinedInput-root': {
-                background: 'rgba(255, 255, 255, 0.1)',
+                background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.1)',
                 borderRadius: '12px',
                 '&:hover': {
-                  background: 'rgba(255, 255, 255, 0.15)',
+                  background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.15)',
                 },
                 '&.Mui-focused': {
-                  background: 'rgba(255, 255, 255, 0.2)',
+                  background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.2)',
                 },
               },
               '& .MuiInputLabel-root': {
-                color: 'rgba(255, 255, 255, 0.8)',
+                color: 'white',
+                background: 'transparent',
+                fontWeight: 500,
+                zIndex: 2,
+                padding: '0 4px',
+                transition: 'color 0.2s',
+              },
+              '& .MuiInputLabel-root.Mui-focused': {
+                color: theme.palette.primary.main,
+                background: theme.palette.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '4px',
+                padding: '0 4px',
               },
               '& .MuiInputBase-input': {
-                color: 'rgba(255, 255, 255, 0.9)',
+                color: 'white',
+              },
+              '& .MuiFormHelperText-root': {
+                color: theme.palette.text.secondary,
               },
             }}
           />
