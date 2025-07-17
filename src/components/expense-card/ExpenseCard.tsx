@@ -7,6 +7,7 @@ import DialogActions from "@mui/material/DialogActions";
 import ExpenseForm from "../add-expense-form/ExpenseForm";
 import { ExpenseService } from "../../services/expense.service";
 import { useSnackbar } from "notistack";
+import { getCurrencySymbol } from '../add-expense-form/expenseForm.type';
 
 interface ExpenseCardProps {
   expense: any;
@@ -50,7 +51,7 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
     <div className="expense-card">
       <div className="expense-header">
         <h3 className="expense-title">{expense.expenseName}</h3>
-        <p className="expense-amount">${expense.price}</p>
+        <p className="expense-amount">{getCurrencySymbol(expense.currency || 'INR')}{expense.price}</p>
       </div>
 
       <span className="expense-category">{expense.category}</span>

@@ -9,7 +9,7 @@ export interface ExpenseData {
   // New fields for enhanced features
   isRecurring?: boolean;
   frequency?: 'weekly' | 'monthly' | 'yearly';
-  currency?: string;
+  currency?: string; // default should be INR
   receiptUrl?: string;
   sharedWith?: string[];
   budgetId?: string;
@@ -20,7 +20,7 @@ export interface BudgetData {
   category: string;
   amount: number;
   period: 'monthly' | 'yearly';
-  currency: string;
+  currency: string; // default should be INR
   userId: string;
   createdAt: Date;
 }
@@ -32,7 +32,7 @@ export interface FinancialGoal {
   currentAmount: number;
   targetDate: Date;
   type: 'savings' | 'debt-reduction' | 'spending-limit';
-  currency: string;
+  currency: string; // default should be INR
   userId: string;
   createdAt: Date;
 }
@@ -44,6 +44,7 @@ export interface RecurringExpense {
   category: string;
   description: string;
   frequency: 'weekly' | 'monthly' | 'yearly';
+  currency: string; // default should be INR
   nextDueDate: Date;
   isActive: boolean;
   userId: string;
@@ -80,3 +81,8 @@ export const frequencyOptions = [
   { value: "monthly", label: "Monthly" },
   { value: "yearly", label: "Yearly" },
 ];
+
+export function getCurrencySymbol(currencyCode: string) {
+  const currency = currencies.find(c => c.code === currencyCode);
+  return currency?.symbol || currencyCode;
+}

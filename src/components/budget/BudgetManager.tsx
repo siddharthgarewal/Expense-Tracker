@@ -41,7 +41,7 @@ const BudgetManager: React.FC = () => {
     category: '',
     amount: '',
     period: 'monthly' as 'monthly' | 'yearly',
-    currency: 'USD',
+    currency: 'INR',
   });
 
   const loadBudgets = useCallback(async () => {
@@ -141,7 +141,7 @@ const BudgetManager: React.FC = () => {
       category: '',
       amount: '',
       period: 'monthly',
-      currency: 'USD',
+      currency: 'INR',
     });
   };
 
