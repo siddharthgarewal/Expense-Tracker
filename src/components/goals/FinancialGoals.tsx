@@ -184,7 +184,15 @@ const FinancialGoals: React.FC = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">Financial Goals</Typography>
+        <Typography variant="h4"
+          sx={{
+            fontWeight: 700,
+            background: 'linear-gradient(135deg, #502881 0%, #065269 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >Financial Goals</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}

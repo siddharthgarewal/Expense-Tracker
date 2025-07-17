@@ -23,6 +23,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useNavigate } from "react-router-dom";
 import { useUserAuth } from "../context/UserAuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { useEffect } from "react";
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -62,10 +63,18 @@ function Header() {
   const handleLogout = async () => {
     try {
       await logOut();
+      handleClose();
     } catch (error) {
       console.log(error);
     }
   };
+
+  // Close menu if user logs out (user becomes null)
+  useEffect(() => {
+    if (!user) {
+      setAnchorEl(null);
+    }
+  }, [user]);
 
   const getInitials = (name: string) => {
     return name
