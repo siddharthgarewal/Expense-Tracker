@@ -198,6 +198,84 @@
   background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
 }
 
+/* Accessibility improvements */
+.keyboard-navigation button:focus,
+.keyboard-navigation [role="button"]:focus,
+.keyboard-navigation input:focus,
+.keyboard-navigation select:focus,
+.keyboard-navigation textarea:focus,
+.keyboard-navigation [tabindex]:focus {
+  outline: 3px solid #667eea !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3) !important;
+}
+
+/* High contrast focus for better visibility */
+.keyboard-navigation .MuiButton-root:focus {
+  outline: 3px solid #667eea !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3) !important;
+}
+
+.keyboard-navigation .MuiTextField-root:focus-within {
+  outline: 3px solid #667eea !important;
+  outline-offset: 2px !important;
+  border-radius: 12px;
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Skip link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #667eea;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 9999;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Improved color contrast for dark mode */
+[data-theme="dark"] .keyboard-navigation button:focus,
+[data-theme="dark"] .keyboard-navigation [role="button"]:focus,
+[data-theme="dark"] .keyboard-navigation input:focus,
+[data-theme="dark"] .keyboard-navigation select:focus,
+[data-theme="dark"] .keyboard-navigation textarea:focus {
+  outline: 3px solid #a5b4fc !important;
+  box-shadow: 0 0 0 3px rgba(165, 180, 252, 0.3) !important;
+}
+
+/* Reduced motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 [data-theme="dark"] .modern-container {
   background: rgba(30, 41, 59, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.1);

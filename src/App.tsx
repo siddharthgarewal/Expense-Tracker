@@ -17,6 +17,8 @@ import RecurringExpenseManager from "./components/recurring/RecurringExpenseMana
 import FinancialGoals from "./components/goals/FinancialGoals";
 import GroupList from './components/groups/GroupList';
 import GroupDetails from './components/groups/GroupDetails';
+import Breadcrumbs from './components/navigation/Breadcrumbs';
+import { AccessibilityProvider } from './components/accessibility/AccessibilityProvider';
 
 function App() {
   const expense = new ExpenseService();
@@ -32,11 +34,13 @@ function App() {
   };
 
   return (
-    <CustomThemeProvider>
-      <div className="App">
-        <UserAuthContextProvider>
+    <AccessibilityProvider>
+      <CustomThemeProvider>
+        <div className="App">
+          <UserAuthContextProvider>
           <Header />
           <div className="subpart">
+            <Breadcrumbs />
             <Routes>
               <Route path="/" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
@@ -106,9 +110,10 @@ function App() {
               />
             </Routes>
           </div>
-        </UserAuthContextProvider>
-      </div>
-    </CustomThemeProvider>
+          </UserAuthContextProvider>
+        </div>
+      </CustomThemeProvider>
+    </AccessibilityProvider>
   );
 }
 

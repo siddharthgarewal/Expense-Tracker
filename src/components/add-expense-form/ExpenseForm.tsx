@@ -14,6 +14,8 @@ import dayjs from "dayjs";
 import { useUserAuth } from "../context/UserAuthContext";
 import { useTheme } from "@mui/material/styles";
 import SplitExpenseForm from "../split-expense/SplitExpenseForm";
+import { useFormValidation } from "../../hooks/useFormValidation";
+import HelpTooltip from "../common/HelpTooltip";
 
 interface ExpenseFormPropType {
   isEditForm?: boolean;
@@ -56,6 +58,34 @@ const ExpenseForm = ({
   const { user } = useUserAuth();
   const theme = useTheme();
 
+  // Form validation rules
+  const validationRules = {
+    expenseName: {
+      required: true,
+      minLength: 2,
+      maxLength: 100,
+    },
+    price: {
+      required: true,
+      min: 0.01,
+      max: 999999,
+      custom: (value: any) => {
+        if (value && isNaN(Number(value))) {
+          return 'Price must be a valid number';
+        }
+        return null;
+      },
+    },
+    category: {
+      required: true,
+    },
+    description: {
+      maxLength: 500,
+    },
+  };
+
+  const { errors, isValid, touched, validateField, validateForm, clearValidation, setFieldTouched } = useFormValidation(validationRules);
+
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     // Ensure date is valid before saving
@@ -87,7 +117,15 @@ const ExpenseForm = ({
   };
 
   const handleChange = (event: { target: { name: any; value: any } }) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+    // Real-time validation
+    validateField(name, value);
+  };
+
+  const handleFieldBlur = (fieldName: string, value: any) => {
+    setFieldTouched(fieldName, true);
+    validateField(fieldName, value);
   };
 
   const handleDateChange = (date: any) => {
@@ -206,14 +244,26 @@ const ExpenseForm = ({
       >
               <Grid container spacing={2}>
         <Grid item xs={12}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Typography variant="body2" sx={{ color: theme.palette.text.primary, fontWeight: 500 }}>
+              Expense Name
+            </Typography>
+            <HelpTooltip 
+              title="Give your expense a clear, descriptive name (e.g., 'Lunch at Pizza Palace', 'Monthly Phone Bill'). This helps you identify it later when reviewing your spending."
+              placement="top"
+            />
+          </Box>
           <TextField
             label="Expense Name"
             name="expenseName"
             value={formData.expenseName}
             onChange={handleChange}
+            onBlur={() => handleFieldBlur('expenseName', formData.expenseName)}
             fullWidth
             margin="normal"
             required
+            error={touched.expenseName && !!errors.expenseName}
+            helperText={touched.expenseName && errors.expenseName ? errors.expenseName : 'Enter a descriptive name for your expense'}
             sx={{
               '& .MuiOutlinedInput-root': {
                 background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.9)',
@@ -255,10 +305,13 @@ const ExpenseForm = ({
             name="price"
             value={formData.price || ""}
             onChange={handleChange}
+            onBlur={() => handleFieldBlur('price', formData.price)}
             fullWidth
             margin="normal"
             type="number"
             required
+            error={touched.price && !!errors.price}
+            helperText={touched.price && errors.price ? errors.price : 'Enter the amount spent'}
             inputProps={{ min: 0, step: 0.01 }}
             sx={{
               '& .MuiOutlinedInput-root': {
@@ -503,15 +556,21 @@ const ExpenseForm = ({
 
         <Grid item xs={12}>
           <FormGroup>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formData.isRecurring || false}
-                  onChange={handleRecurringToggle}
-                />
-              }
-              label="Recurring Expense"
-            />
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formData.isRecurring || false}
+                    onChange={handleRecurringToggle}
+                  />
+                }
+                label="Recurring Expense"
+              />
+              <HelpTooltip 
+                title="Enable this for expenses that repeat regularly, like subscriptions, rent, or utility bills. You can set the frequency (monthly, yearly, etc.) to track these expenses automatically."
+                placement="top"
+              />
+            </Box>
           </FormGroup>
         </Grid>
 

@@ -1,11 +1,13 @@
-# 💰 Expense Tracker
+# 💰 Expensify - Advanced Expense Tracker
 
-A modern, feature-rich expense tracking application built with React, TypeScript, and Firebase. Track your expenses, set budgets, manage recurring payments, and achieve your financial goals with beautiful analytics and insights.
+A comprehensive, modern expense tracking application built with React, TypeScript, and Firebase. Track your expenses, set budgets, manage recurring payments, split bills with friends, and achieve your financial goals with powerful analytics and insights. Features advanced usability enhancements including real-time form validation, accessibility support, and intuitive user guidance.
 
-![Expense Tracker](https://img.shields.io/badge/React-18.2.0-blue)
-![TypeScript](https://img.shields.io/badge/TypeScript-4.9.5-blue)
-![Firebase](https://img.shields.io/badge/Firebase-10.8.1-orange)
-![Material-UI](https://img.shields.io/badge/Material--UI-5.15.13-green)
+![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-4.9.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-10.8.1-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Material-UI](https://img.shields.io/badge/Material--UI-5.15.13-007FFF?style=for-the-badge&logo=mui&logoColor=white)
+![Accessibility](https://img.shields.io/badge/Accessibility-WCAG_2.1-green?style=for-the-badge&logo=accessibility)
+![PWA Ready](https://img.shields.io/badge/PWA-Ready-purple?style=for-the-badge&logo=pwa)
 
 ## ✨ Features
 
