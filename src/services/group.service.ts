@@ -28,6 +28,19 @@ export interface GroupActivity {
   details?: any;
 }
 
+export interface GroupInvitation {
+  id?: string;
+  groupId: string;
+  groupName: string;
+  inviterName: string;
+  inviterEmail: string;
+  inviteeEmail: string;
+  status: 'pending' | 'accepted' | 'declined' | 'expired';
+  createdAt: any;
+  expiresAt: any;
+  role: string;
+}
+
 export class GroupService {
   groupRef = collection(db, 'groups');
 
@@ -104,4 +117,141 @@ export class GroupService {
       timestamp: Timestamp.now(),
     });
   }
-} 
+
+  // Invitation methods
+  async sendInvitation(
+    groupId: string,
+    inviteeEmail: string,
+    inviterName: string,
+    inviterEmail: string,
+    role: string = 'member'
+  ): Promise<string> {
+    const group = await this.getGroupById(groupId);
+    if (!group) throw new Error('Group not found');
+
+    // Check if user is already a member
+    const existingMember = group.members?.find((m: GroupMember) => m.email === inviteeEmail);
+    if (existingMember) {
+      throw new Error('User is already a member of this group');
+    }
+
+    // Check if there's already a pending invitation
+    const invitationsRef = collection(db, 'invitations');
+    const existingInvitationQuery = query(
+      invitationsRef,
+      where('groupId', '==', groupId),
+      where('inviteeEmail', '==', inviteeEmail),
+      where('status', '==', 'pending')
+    );
+    const existingInvitations = await getDocs(existingInvitationQuery);
+    if (!existingInvitations.empty) {
+      throw new Error('An invitation is already pending for this email');
+    }
+
+    const invitation: GroupInvitation = {
+      groupId,
+      groupName: group.name,
+      inviterName,
+      inviterEmail,
+      inviteeEmail,
+      status: 'pending',
+      createdAt: Timestamp.now(),
+      expiresAt: Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)), // 7 days
+      role,
+    };
+
+    const docRef = await addDoc(invitationsRef, invitation);
+    
+    // Add activity to group
+    await this.addActivity(groupId, {
+      type: 'member_invited',
+      user: { id: inviterEmail, name: inviterName },
+      details: { inviteeEmail, role }
+    });
+
+    return docRef.id;
+  }
+
+  async getInvitationsForUser(userEmail: string): Promise<GroupInvitation[]> {
+    const invitationsRef = collection(db, 'invitations');
+    const q = query(
+      invitationsRef,
+      where('inviteeEmail', '==', userEmail),
+      where('status', '==', 'pending')
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as GroupInvitation));
+  }
+
+  async getInvitationsForGroup(groupId: string): Promise<GroupInvitation[]> {
+    const invitationsRef = collection(db, 'invitations');
+    const q = query(
+      invitationsRef,
+      where('groupId', '==', groupId)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as GroupInvitation));
+  }
+
+  async acceptInvitation(invitationId: string, user: { id: string; name: string; email: string }): Promise<void> {
+    const invitationDoc = doc(db, 'invitations', invitationId);
+    const invitationSnap = await getDoc(invitationDoc);
+    
+    if (!invitationSnap.exists()) {
+      throw new Error('Invitation not found');
+    }
+
+    const invitation = invitationSnap.data() as GroupInvitation;
+    
+    if (invitation.status !== 'pending') {
+      throw new Error('Invitation is no longer valid');
+    }
+
+    if (invitation.expiresAt.toDate() < new Date()) {
+      await updateDoc(invitationDoc, { status: 'expired' });
+      throw new Error('Invitation has expired');
+    }
+
+    // Add user to group
+    await this.addMember(invitation.groupId, {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: invitation.role
+    }, invitation.role);
+
+    // Update invitation status
+    await updateDoc(invitationDoc, { status: 'accepted' });
+
+    // Add activity to group
+    await this.addActivity(invitation.groupId, {
+      type: 'member_joined',
+      user: { id: user.id, name: user.name },
+      details: { email: user.email, role: invitation.role }
+    });
+  }
+
+  async declineInvitation(invitationId: string): Promise<void> {
+    const invitationDoc = doc(db, 'invitations', invitationId);
+    await updateDoc(invitationDoc, { status: 'declined' });
+  }
+
+  async cancelInvitation(invitationId: string): Promise<void> {
+    const invitationDoc = doc(db, 'invitations', invitationId);
+    const invitationSnap = await getDoc(invitationDoc);
+    
+    if (!invitationSnap.exists()) {
+      throw new Error('Invitation not found');
+    }
+
+    const invitation = invitationSnap.data() as GroupInvitation;
+    await updateDoc(invitationDoc, { status: 'declined' });
+
+    // Add activity to group
+    await this.addActivity(invitation.groupId, {
+      type: 'invitation_cancelled',
+      user: { id: invitation.inviterEmail, name: invitation.inviterName },
+      details: { inviteeEmail: invitation.inviteeEmail }
+    });
+  }
+}
