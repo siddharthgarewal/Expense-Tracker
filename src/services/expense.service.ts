@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  getDoc,
   query,
   updateDoc,
   where,
@@ -45,6 +46,27 @@ export class ExpenseService {
   deleteExpense(id: string) {
     const expenseDoc = doc(db, "allExpenses", id);
     return deleteDoc(expenseDoc);
+  }
+
+  /**
+   * Settle a specific debt in a split expense
+   * @param expenseId The Firestore document ID of the expense
+   * @param fromId The participant id who owes
+   * @param toId The participant id who is owed
+   */
+  async settleDebt(expenseId: string, fromId: string, toId: string) {
+    const expenseDoc = doc(db, "allExpenses", expenseId);
+    const expenseSnap = await getDoc(expenseDoc);
+    if (!expenseSnap.exists()) throw new Error("Expense not found");
+    const expenseData = expenseSnap.data();
+    const debts = expenseData.split?.debts || [];
+    const updatedDebts = debts.map((d: any) =>
+      d.from === fromId && d.to === toId ? { ...d, settled: true } : d
+    );
+    await updateDoc(expenseDoc, {
+      "split.debts": updatedDebts,
+    });
+    return true;
   }
 
   // New analytics methods

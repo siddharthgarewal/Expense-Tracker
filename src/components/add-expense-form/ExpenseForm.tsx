@@ -13,12 +13,26 @@ import { Checkbox, FormControlLabel, FormGroup, Grid, Switch, Box, Typography } 
 import dayjs from "dayjs";
 import { useUserAuth } from "../context/UserAuthContext";
 import { useTheme } from "@mui/material/styles";
+import SplitExpenseForm from "../split-expense/SplitExpenseForm";
 
 interface ExpenseFormPropType {
   isEditForm?: boolean;
   sendFormData: (value: any) => void;
   handleClose?: () => void;
   initialExpenseValue?: any;
+}
+
+// Utility to remove undefined fields deeply from an object or array
+function removeUndefined(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(removeUndefined);
+  } else if (obj && typeof obj === 'object') {
+    return Object.entries(obj).reduce((acc, [k, v]) => {
+      if (v !== undefined) acc[k] = removeUndefined(v);
+      return acc;
+    }, {} as any);
+  }
+  return obj;
 }
 
 const ExpenseForm = ({
@@ -37,6 +51,8 @@ const ExpenseForm = ({
     frequency: "monthly",
     currency: "INR",
   });
+  const [isSplit, setIsSplit] = useState(false);
+  const [splitData, setSplitData] = useState<any>(null);
   const { user } = useUserAuth();
   const theme = useTheme();
 
@@ -46,8 +62,10 @@ const ExpenseForm = ({
       ...formData,
       date: dayjs(formData.date).toDate(),
       user: user?.email,
+      ...(isSplit && splitData ? { isSplit: true, split: splitData } : {}),
     };
-    sendFormData(newExpense);
+    const cleanedExpense = removeUndefined(newExpense);
+    sendFormData(cleanedExpense);
     setFormData({
       expenseName: "",
       price: null,
@@ -58,6 +76,7 @@ const ExpenseForm = ({
       frequency: "monthly",
       currency: "INR",
     });
+    setSplitData(null);
   };
 
   const handleChange = (event: { target: { name: any; value: any } }) => {
@@ -523,6 +542,20 @@ const ExpenseForm = ({
                 ))}
               </Select>
             </FormControl>
+          </Grid>
+        )}
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={<Switch checked={isSplit} onChange={(_, checked) => setIsSplit(checked)} />}
+            label="Split Expense"
+          />
+        </Grid>
+        {isSplit && (
+          <Grid item xs={12}>
+            <SplitExpenseForm
+              totalAmount={Number(formData.price) || 0}
+              onChange={setSplitData}
+            />
           </Grid>
         )}
       </Grid>

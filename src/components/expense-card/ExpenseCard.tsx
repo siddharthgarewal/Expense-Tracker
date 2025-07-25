@@ -8,6 +8,8 @@ import ExpenseForm from "../add-expense-form/ExpenseForm";
 import { ExpenseService } from "../../services/expense.service";
 import { useSnackbar } from "notistack";
 import { getCurrencySymbol } from '../add-expense-form/expenseForm.type';
+import DebtSummary from '../split-expense/DebtSummary';
+import { useUserAuth } from "../context/UserAuthContext";
 
 interface ExpenseCardProps {
   expense: any;
@@ -20,6 +22,8 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const expenseService = new ExpenseService();
+  const { user } = useUserAuth();
+  const currentUserId = user?.uid || (user?.email || undefined);
 
   const handleClose = () => {
     setOpen(false);
@@ -47,12 +51,46 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
       .catch((err) => enqueueSnackbar(err, { variant: "error" }));
   };
 
+  const handleSettleDebt = async (debt: any) => {
+    try {
+      await expenseService.settleDebt(expense.id, debt.from, debt.to);
+      enqueueSnackbar('Debt settled!', { variant: 'success' });
+      // Optionally, trigger a refresh or update the UI
+      // For now, just update the local expense object
+      if (expense.split && expense.split.debts) {
+        const updatedDebts = expense.split.debts.map((d: any) =>
+          d.from === debt.from && d.to === debt.to ? { ...d, settled: true } : d
+        );
+        updateExpense({ ...expense, split: { ...expense.split, debts: updatedDebts } });
+      }
+    } catch (err) {
+      enqueueSnackbar('Failed to settle debt', { variant: 'error' });
+    }
+  };
+
   return (
     <div className="expense-card">
       <div className="expense-header">
         <h3 className="expense-title">{expense.expenseName}</h3>
         <p className="expense-amount">{getCurrencySymbol(expense.currency || 'INR')}{expense.price}</p>
       </div>
+      {expense.isSplit && expense.split && (
+        <div style={{margin: '12px 0', padding: '12px', background: 'rgba(102,126,234,0.05)', borderRadius: '12px'}}>
+          <strong>Split Details:</strong>
+          <div>Participants: {expense.split.participants?.map((p: any) => p.name).join(', ')}</div>
+          <div>Payer: {expense.split.payerId}</div>
+          <div>Split Method: {expense.split.splitMethod}</div>
+          <DebtSummary
+            participants={expense.split.participants || []}
+            splitDetails={expense.split.splitDetails || []}
+            payerId={expense.split.payerId}
+            currency={expense.currency || 'INR'}
+            debtsFromBackend={expense.split.debts || []}
+            onSettle={handleSettleDebt}
+            currentUserId={currentUserId}
+          />
+        </div>
+      )}
 
       <span className="expense-category">{expense.category}</span>
 
