@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -29,7 +29,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const InvitationNotifications: React.FC = () => {
   const { user } = useUserAuth();
-  const groupService = new GroupService();
+  const groupService = useMemo(() => new GroupService(), []);
 
   const [invitations, setInvitations] = useState<GroupInvitation[]>([]);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);

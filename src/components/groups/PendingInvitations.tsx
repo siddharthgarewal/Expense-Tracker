@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -32,7 +32,7 @@ const PendingInvitations: React.FC<PendingInvitationsProps> = ({
   isAdmin, 
   onInvitationUpdate 
 }) => {
-  const groupService = new GroupService();
+  const groupService = useMemo(() => new GroupService(), []);
 
   const [invitations, setInvitations] = useState<GroupInvitation[]>([]);
   const [expanded, setExpanded] = useState(false);
