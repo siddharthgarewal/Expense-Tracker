@@ -58,9 +58,16 @@ const ExpenseForm = ({
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
+    // Ensure date is valid before saving
+    let dateToSave = formData.date;
+    if (!dateToSave || (typeof dateToSave === 'object' && Object.keys(dateToSave).length === 0)) {
+      dateToSave = new Date();
+    } else if (typeof dateToSave === 'object' && 'isValid' in dateToSave && typeof dateToSave.isValid === 'function' && !dateToSave.isValid()) {
+      dateToSave = new Date();
+    }
     const newExpense = {
       ...formData,
-      date: dayjs(formData.date).toDate(),
+      date: dayjs(dateToSave).toDate(),
       user: user?.email,
       ...(isSplit && splitData ? { isSplit: true, split: splitData } : {}),
     };
@@ -103,8 +110,24 @@ const ExpenseForm = ({
     if (initialExpenseValue) {
       const { expenseName, price, category, description, date, isRecurring, frequency, currency } =
         initialExpenseValue;
-      const jsDate = new Date(date.seconds * 1000 + date.nanoseconds / 1000000);
-      const formattedDate = dayjs(jsDate);
+      console.log("initialExpenseValue", initialExpenseValue);
+        let jsDate = null;
+      if (date && typeof date === 'object' && Object.keys(date).length === 0) {
+        jsDate = null;
+      } else if (date) {
+        if (typeof date === 'object') {
+          if ('toDate' in date && typeof date.toDate === 'function') {
+            jsDate = date.toDate();
+          } else if ('seconds' in date && typeof date.seconds === 'number') {
+            jsDate = new Date(date.seconds * 1000);
+          } else if (date instanceof Date) {
+            jsDate = date;
+          }
+        } else if (typeof date === 'string') {
+          jsDate = new Date(date);
+        }
+      }
+      const formattedDate = jsDate && !isNaN(new Date(jsDate).getTime()) ? dayjs(jsDate) : null;
       setFormData({
         expenseName,
         price,

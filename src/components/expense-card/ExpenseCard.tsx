@@ -15,9 +15,10 @@ interface ExpenseCardProps {
   expense: any;
   deleteExpense: (id: string) => void;
   updateExpense: (expense: any) => void;
+  refreshExpenses?: () => void; // Add this prop
 }
 
-const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps) => {
+const ExpenseCard = ({ expense, deleteExpense, updateExpense, refreshExpenses }: ExpenseCardProps) => {
   const [open, setOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
@@ -53,13 +54,25 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
 
   const handleSettleDebt = async (debt: any) => {
     try {
-      await expenseService.settleDebt(expense.id, debt.from, debt.to);
+      await expenseService.settleDebt(
+        expense.id,
+        debt.from,
+        debt.to,
+        {
+          settledAt: debt.settledAt,
+          settledBy: debt.settledBy,
+          note: debt.note,
+        }
+      );
       enqueueSnackbar('Debt settled!', { variant: 'success' });
-      // Optionally, trigger a refresh or update the UI
-      // For now, just update the local expense object
-      if (expense.split && expense.split.debts) {
+      if (refreshExpenses) {
+        refreshExpenses(); // Always fetch latest from Firestore
+      } else if (expense.split && expense.split.debts) {
+        // fallback: update local state
         const updatedDebts = expense.split.debts.map((d: any) =>
-          d.from === debt.from && d.to === debt.to ? { ...d, settled: true } : d
+          d.from === debt.from && d.to === debt.to
+            ? { ...d, settled: true, settledAt: debt.settledAt, settledBy: debt.settledBy, note: debt.note }
+            : d
         );
         updateExpense({ ...expense, split: { ...expense.split, debts: updatedDebts } });
       }
@@ -99,7 +112,24 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
       )}
 
       <div className="expense-date">
-        {new Date(expense.date.seconds * 1000).toLocaleDateString()}
+        {(() => {
+          let dateObj = expense.date;
+          // Handle missing, null, or empty object
+          if (!dateObj || (typeof dateObj === 'object' && Object.keys(dateObj).length === 0)) {
+            return 'No date';
+          }
+          if (typeof dateObj === 'object') {
+            if ('toDate' in dateObj && typeof dateObj.toDate === 'function') {
+              dateObj = dateObj.toDate();
+            } else if ('seconds' in dateObj && typeof dateObj.seconds === 'number') {
+              dateObj = new Date(dateObj.seconds * 1000);
+            }
+          } else if (typeof dateObj === 'string') {
+            dateObj = new Date(dateObj);
+          }
+          const dateStr = dateObj instanceof Date && !isNaN(dateObj.getTime()) ? dateObj.toLocaleDateString() : 'No date';
+          return dateStr;
+        })()}
       </div>
 
       <div className="expense-actions">
