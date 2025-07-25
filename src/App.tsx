@@ -15,6 +15,8 @@ import AnalyticsDashboard from "./components/analytics/AnalyticsDashboard";
 import BudgetManager from "./components/budget/BudgetManager";
 import RecurringExpenseManager from "./components/recurring/RecurringExpenseManager";
 import FinancialGoals from "./components/goals/FinancialGoals";
+import GroupList from './components/groups/GroupList';
+import GroupDetails from './components/groups/GroupDetails';
 
 function App() {
   const expense = new ExpenseService();
@@ -83,6 +85,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <FinancialGoals />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/groups"
+                element={
+                  <ProtectedRoute>
+                    <GroupList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/groups/:groupId"
+                element={
+                  <ProtectedRoute>
+                    <GroupDetails />
                   </ProtectedRoute>
                 }
               />
