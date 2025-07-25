@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, Button, Grid, Avatar, Box } from '@mui/material';
-import { GroupService, GroupMember } from '../../services/group.service';
+import { GroupService } from '../../services/group.service';
 import { useUserAuth } from '../context/UserAuthContext';
 import CreateGroupForm from './CreateGroupForm';
 import { useNavigate } from 'react-router-dom';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -40,7 +40,7 @@ const InvitationNotifications: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
 
-  const fetchInvitations = async () => {
+  const fetchInvitations = useCallback(async () => {
     if (!user?.email) return;
     
     try {
@@ -48,12 +48,14 @@ const InvitationNotifications: React.FC = () => {
       setInvitations(userInvitations);
     } catch (error) {
       console.error('Error fetching invitations:', error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [user?.email, groupService]);
 
   useEffect(() => {
     fetchInvitations();
-  }, [user?.email]);
+  }, [fetchInvitations]);
 
   const handleNotificationClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

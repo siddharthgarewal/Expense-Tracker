@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -40,7 +40,7 @@ const PendingInvitations: React.FC<PendingInvitationsProps> = ({
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
 
-  const fetchInvitations = async () => {
+  const fetchInvitations = useCallback(async () => {
     try {
       const groupInvitations = await groupService.getInvitationsForGroup(groupId);
       const pendingInvitations = groupInvitations.filter(inv => inv.status === 'pending');
@@ -48,11 +48,11 @@ const PendingInvitations: React.FC<PendingInvitationsProps> = ({
     } catch (error) {
       console.error('Error fetching invitations:', error);
     } 
-  };
+  }, [groupId, groupService]);
 
   useEffect(() => {
     fetchInvitations();
-  }, [groupId]);
+  }, [fetchInvitations]);
 
   const handleCancelInvitation = async (invitationId: string, inviteeEmail: string) => {
     try {

@@ -37,7 +37,6 @@ const getParticipant = (participants: Participant[], id: string) =>
   participants.find(p => p.id === id) || { id, name: id };
 
 function calculateDebts(participants: Participant[], splitDetails: SplitDetail[], payerId: string, debtsFromBackend?: Debt[]): Debt[] {
-  const payer = getParticipant(participants, payerId);
   const debts: Debt[] = [];
   splitDetails.forEach(p => {
     if (p.id !== payerId && p.amount && p.amount > 0) {

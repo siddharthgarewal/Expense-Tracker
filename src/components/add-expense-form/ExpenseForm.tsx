@@ -48,7 +48,7 @@ const ExpenseForm = ({
     price: null,
     category: "",
     description: "",
-    date: null,
+    date: dayjs(),
     isRecurring: false,
     frequency: "monthly",
     currency: "INR",
@@ -108,7 +108,7 @@ const ExpenseForm = ({
       price: null,
       category: "",
       description: "",
-      date: null,
+      date: dayjs(),
       isRecurring: false,
       frequency: "monthly",
       currency: "INR",
@@ -136,7 +136,8 @@ const ExpenseForm = ({
     if (event.target.checked) {
       setFormData({ ...formData, date: dayjs() });
     } else {
-      setFormData({ ...formData, date: null });
+      // Don't set to null, keep current date or set to today if somehow null
+      setFormData({ ...formData, date: formData.date || dayjs() });
     }
   };
 
@@ -165,7 +166,7 @@ const ExpenseForm = ({
           jsDate = new Date(date);
         }
       }
-      const formattedDate = jsDate && !isNaN(new Date(jsDate).getTime()) ? dayjs(jsDate) : null;
+      const formattedDate = jsDate && !isNaN(new Date(jsDate).getTime()) ? dayjs(jsDate) : dayjs();
       setFormData({
         expenseName,
         price,

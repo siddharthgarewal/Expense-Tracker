@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography, Avatar, CircularProgress, Paper } from '@mui/material';
 import { GroupService, GroupMember } from '../../services/group.service';
@@ -20,18 +20,18 @@ const GroupDetails: React.FC = () => {
   const currentUser = group?.members?.find((m: GroupMember) => m.id === currentUserId);
   const isAdmin = currentUser?.role === 'admin';
 
-  const fetchGroup = () => {
+  const fetchGroup = useCallback(() => {
     if (groupId) {
       setLoading(true);
       groupService.getGroupById(groupId)
         .then(g => setGroup(g))
         .finally(() => setLoading(false));
     }
-  };
+  }, [groupId]);
 
   useEffect(() => {
     fetchGroup();
-  }, [groupId]);
+  }, [fetchGroup]);
 
   if (loading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}><CircularProgress /></Box>;
   if (!group) return <Box sx={{ textAlign: 'center', mt: 8 }}><Typography variant="h6">Group not found</Typography></Box>;

@@ -41,27 +41,27 @@ export const CustomThemeProvider: React.FC<ThemeProviderProps> = ({ children }) 
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
       primary: {
-        main: '#667eea',
+        main: '#555555',
       },
       secondary: {
-        main: '#764ba2',
+        main: '#888888',
       },
       background: {
-        default: isDarkMode ? '#0f172a' : '#f8fafc',
+        default: isDarkMode ? '#0f172a' : '#fafafa',
         paper: isDarkMode ? '#1e293b' : '#ffffff',
       },
       text: {
-        primary: isDarkMode ? '#f8fafc' : '#1a202c',
-        secondary: isDarkMode ? '#cbd5e0' : '#4a5568',
+        primary: isDarkMode ? '#f8fafc' : '#222222',
+        secondary: isDarkMode ? '#cbd5e0' : '#555555',
       },
     },
     typography: {
       fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
       h1: {
-        fontWeight: 700,
+        fontWeight: 600,
       },
       h2: {
-        fontWeight: 700,
+        fontWeight: 600,
       },
       h3: {
         fontWeight: 600,
@@ -77,7 +77,7 @@ export const CustomThemeProvider: React.FC<ThemeProviderProps> = ({ children }) 
       },
     },
     shape: {
-      borderRadius: 12,
+      borderRadius: 6,
     },
     components: {
       MuiCard: {
@@ -85,35 +85,35 @@ export const CustomThemeProvider: React.FC<ThemeProviderProps> = ({ children }) 
           root: {
             boxShadow: isDarkMode 
               ? '0 4px 6px rgba(0, 0, 0, 0.3)' 
-              : '0 2px 4px rgba(0, 0, 0, 0.1)',
-            borderRadius: 20,
+              : 'none',
+            borderRadius: 12,
             background: isDarkMode 
               ? 'rgba(30, 41, 59, 0.95)' 
-              : 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
+              : '#ffffff',
+            backdropFilter: 'none',
             border: isDarkMode 
               ? '1px solid rgba(255, 255, 255, 0.1)' 
-              : '1px solid rgba(255, 255, 255, 0.2)',
+              : '1px solid rgba(220, 220, 220, 0.4)',
           },
         },
       },
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 12,
+            borderRadius: 6,
             textTransform: 'none',
             fontWeight: 600,
-            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-            transition: 'all 0.3s ease',
+            boxShadow: 'none',
+            transition: 'none',
             '&:hover': {
-              transform: 'translateY(-2px)',
-              boxShadow: '0 6px 20px rgba(102, 126, 234, 0.6)',
+              transform: 'none',
+              boxShadow: 'none',
             },
           },
           contained: {
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            background: '#555555',
             '&:hover': {
-              background: 'linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)',
+              background: '#444444',
             },
           },
         },
@@ -122,20 +122,20 @@ export const CustomThemeProvider: React.FC<ThemeProviderProps> = ({ children }) 
         styleOverrides: {
           root: {
             '& .MuiOutlinedInput-root': {
-              borderRadius: 12,
+              borderRadius: 6,
               background: isDarkMode 
                 ? 'rgba(255, 255, 255, 0.1)' 
-                : 'rgba(255, 255, 255, 0.8)',
+                : '#fefefe',
               '&:hover': {
                 background: isDarkMode 
                   ? 'rgba(255, 255, 255, 0.15)' 
-                  : 'rgba(255, 255, 255, 0.95)',
+                  : '#ffffff',
               },
               '&.Mui-focused': {
                 background: isDarkMode 
                   ? 'rgba(255, 255, 255, 0.2)' 
-                  : 'rgba(255, 255, 255, 1)',
-                boxShadow: '0 6px 20px rgba(102, 126, 234, 0.2)',
+                  : '#ffffff',
+                boxShadow: 'none',
               },
             },
           },
@@ -145,14 +145,14 @@ export const CustomThemeProvider: React.FC<ThemeProviderProps> = ({ children }) 
         styleOverrides: {
           root: {
             '& .MuiOutlinedInput-root': {
-              borderRadius: 12,
+              borderRadius: 6,
               background: isDarkMode 
                 ? 'rgba(255, 255, 255, 0.1)' 
-                : 'rgba(255, 255, 255, 0.8)',
+                : '#fefefe',
               '&:hover': {
                 background: isDarkMode 
                   ? 'rgba(255, 255, 255, 0.15)' 
-                  : 'rgba(255, 255, 255, 0.95)',
+                  : '#ffffff',
               },
             },
           },
@@ -161,22 +161,22 @@ export const CustomThemeProvider: React.FC<ThemeProviderProps> = ({ children }) 
       MuiDialog: {
         styleOverrides: {
           paper: {
-            borderRadius: 20,
+            borderRadius: 12,
             background: isDarkMode 
               ? 'rgba(30, 41, 59, 0.95)' 
-              : 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
+              : '#ffffff',
+            backdropFilter: 'none',
             border: isDarkMode 
               ? '1px solid rgba(255, 255, 255, 0.1)' 
-              : '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+              : '1px solid rgba(220, 220, 220, 0.4)',
+            boxShadow: 'none',
           },
         },
       },
       MuiChip: {
         styleOverrides: {
           root: {
-            borderRadius: 20,
+            borderRadius: 12,
             fontWeight: 600,
           },
         },
@@ -184,8 +184,8 @@ export const CustomThemeProvider: React.FC<ThemeProviderProps> = ({ children }) 
       MuiLinearProgress: {
         styleOverrides: {
           root: {
-            borderRadius: 10,
-            height: 8,
+            borderRadius: 6,
+            height: 6,
           },
         },
       },
