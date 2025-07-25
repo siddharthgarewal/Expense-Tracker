@@ -8,18 +8,23 @@ import ExpenseForm from "../add-expense-form/ExpenseForm";
 import { ExpenseService } from "../../services/expense.service";
 import { useSnackbar } from "notistack";
 import { getCurrencySymbol } from '../add-expense-form/expenseForm.type';
+import DebtSummary from '../split-expense/DebtSummary';
+import { useUserAuth } from "../context/UserAuthContext";
 
 interface ExpenseCardProps {
   expense: any;
   deleteExpense: (id: string) => void;
   updateExpense: (expense: any) => void;
+  refreshExpenses?: () => void; // Add this prop
 }
 
-const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps) => {
+const ExpenseCard = ({ expense, deleteExpense, updateExpense, refreshExpenses }: ExpenseCardProps) => {
   const [open, setOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const expenseService = new ExpenseService();
+  const { user } = useUserAuth();
+  const currentUserId = user?.uid || (user?.email || undefined);
 
   const handleClose = () => {
     setOpen(false);
@@ -47,12 +52,58 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
       .catch((err) => enqueueSnackbar(err, { variant: "error" }));
   };
 
+  const handleSettleDebt = async (debt: any) => {
+    try {
+      await expenseService.settleDebt(
+        expense.id,
+        debt.from,
+        debt.to,
+        {
+          settledAt: debt.settledAt,
+          settledBy: debt.settledBy,
+          note: debt.note,
+        }
+      );
+      enqueueSnackbar('Debt settled!', { variant: 'success' });
+      if (refreshExpenses) {
+        refreshExpenses(); // Always fetch latest from Firestore
+      } else if (expense.split && expense.split.debts) {
+        // fallback: update local state
+        const updatedDebts = expense.split.debts.map((d: any) =>
+          d.from === debt.from && d.to === debt.to
+            ? { ...d, settled: true, settledAt: debt.settledAt, settledBy: debt.settledBy, note: debt.note }
+            : d
+        );
+        updateExpense({ ...expense, split: { ...expense.split, debts: updatedDebts } });
+      }
+    } catch (err) {
+      enqueueSnackbar('Failed to settle debt', { variant: 'error' });
+    }
+  };
+
   return (
     <div className="expense-card">
       <div className="expense-header">
         <h3 className="expense-title">{expense.expenseName}</h3>
         <p className="expense-amount">{getCurrencySymbol(expense.currency || 'INR')}{expense.price}</p>
       </div>
+      {expense.isSplit && expense.split && (
+        <div style={{margin: '12px 0', padding: '12px', background: 'rgba(102,126,234,0.05)', borderRadius: '12px'}}>
+          <strong>Split Details:</strong>
+          <div>Participants: {expense.split.participants?.map((p: any) => p.name).join(', ')}</div>
+          <div>Payer: {expense.split.payerId}</div>
+          <div>Split Method: {expense.split.splitMethod}</div>
+          <DebtSummary
+            participants={expense.split.participants || []}
+            splitDetails={expense.split.splitDetails || []}
+            payerId={expense.split.payerId}
+            currency={expense.currency || 'INR'}
+            debtsFromBackend={expense.split.debts || []}
+            onSettle={handleSettleDebt}
+            currentUserId={currentUserId}
+          />
+        </div>
+      )}
 
       <span className="expense-category">{expense.category}</span>
 
@@ -61,7 +112,24 @@ const ExpenseCard = ({ expense, deleteExpense, updateExpense }: ExpenseCardProps
       )}
 
       <div className="expense-date">
-        {new Date(expense.date.seconds * 1000).toLocaleDateString()}
+        {(() => {
+          let dateObj = expense.date;
+          // Handle missing, null, or empty object
+          if (!dateObj || (typeof dateObj === 'object' && Object.keys(dateObj).length === 0)) {
+            return 'No date';
+          }
+          if (typeof dateObj === 'object') {
+            if ('toDate' in dateObj && typeof dateObj.toDate === 'function') {
+              dateObj = dateObj.toDate();
+            } else if ('seconds' in dateObj && typeof dateObj.seconds === 'number') {
+              dateObj = new Date(dateObj.seconds * 1000);
+            }
+          } else if (typeof dateObj === 'string') {
+            dateObj = new Date(dateObj);
+          }
+          const dateStr = dateObj instanceof Date && !isNaN(dateObj.getTime()) ? dateObj.toLocaleDateString() : 'No date';
+          return dateStr;
+        })()}
       </div>
 
       <div className="expense-actions">

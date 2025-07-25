@@ -18,12 +18,14 @@ import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import RepeatOutlinedIcon from "@mui/icons-material/RepeatOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
+import GroupIcon from "@mui/icons-material/Group";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useNavigate } from "react-router-dom";
 import { useUserAuth } from "../context/UserAuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useEffect } from "react";
+import InvitationNotifications from "../groups/InvitationNotifications";
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -281,7 +283,33 @@ function Header() {
               >
                 Goals
               </Button>
+              
+              <Button
+                color="inherit"
+                startIcon={<GroupIcon />}
+                onClick={() => navigate("/groups")}
+                sx={{
+                  color: muiTheme.palette.text.primary,
+                  backgroundColor: muiTheme.palette.mode === 'dark' 
+                    ? 'rgba(255, 255, 255, 0.1)' 
+                    : 'rgba(0, 0, 0, 0.1)',
+                  borderRadius: '12px',
+                  padding: '8px 16px',
+                  '&:hover': {
+                    backgroundColor: muiTheme.palette.mode === 'dark' 
+                      ? 'rgba(255, 255, 255, 0.2)' 
+                      : 'rgba(0, 0, 0, 0.2)',
+                    transform: 'translateY(-1px)',
+                  },
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                Groups
+              </Button>
             </Box>
+
+            {/* Invitation Notifications */}
+            <InvitationNotifications />
 
             {/* User Menu */}
             <IconButton
@@ -417,7 +445,15 @@ function Header() {
             <Typography color={muiTheme.palette.text.primary}>Financial Goals</Typography>
           </MenuItem>
 
-          <MenuItem 
+          <MenuItem
+            sx={menuStyle}
+            onClick={() => handleNavigation("/groups")}
+          >
+            <GroupIcon color="primary" />
+            <Typography color={muiTheme.palette.text.primary}>Groups</Typography>
+          </MenuItem>
+
+          <MenuItem
             sx={{
               ...menuStyle,
               borderTop: muiTheme.palette.mode === 'dark' 

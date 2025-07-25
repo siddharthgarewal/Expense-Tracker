@@ -13,6 +13,12 @@ export interface ExpenseData {
   receiptUrl?: string;
   sharedWith?: string[];
   budgetId?: string;
+  isSplit?: boolean;
+  participants?: SplitParticipant[];
+  splitMethod?: 'equal' | 'unequal' | 'percentage';
+  payer?: SplitPayer[];
+  debts?: SplitDebt[];
+  settled?: boolean;
 }
 
 export interface BudgetData {
@@ -49,6 +55,35 @@ export interface RecurringExpense {
   isActive: boolean;
   userId: string;
   createdAt: Date;
+}
+
+export interface SplitParticipant {
+  name: string;
+  email?: string;
+  amount: number;
+  percentage?: number;
+}
+
+export interface SplitPayer {
+  name: string;
+  email?: string;
+  amount: number;
+}
+
+export interface SplitDebt {
+  from: string; // email or name
+  to: string;   // email or name
+  amount: number;
+  settled?: boolean;
+}
+
+export interface SplitExpenseData extends ExpenseData {
+  isSplit: boolean;
+  participants: SplitParticipant[];
+  splitMethod: 'equal' | 'unequal' | 'percentage';
+  payer: SplitPayer[];
+  debts: SplitDebt[];
+  settled: boolean;
 }
 
 export const categories = [

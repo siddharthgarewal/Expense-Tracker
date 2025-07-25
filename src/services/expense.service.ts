@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  getDoc,
   query,
   updateDoc,
   where,
@@ -29,7 +30,12 @@ export class ExpenseService {
 
   // Existing expense methods
   addExpense(newExpense: ExpenseData) {
-    return addDoc(this.expenseRef, newExpense);
+    // Ensure date is always a Firestore Timestamp
+    const expenseToSave = {
+      ...newExpense,
+      date: newExpense.date instanceof Date ? Timestamp.fromDate(newExpense.date) : newExpense.date,
+    };
+    return addDoc(this.expenseRef, expenseToSave);
   }
 
   getAllExpense(user: any) {
@@ -39,12 +45,43 @@ export class ExpenseService {
 
   updateExpense(updatedExpense: any, id: string) {
     const expenseDoc = doc(db, "allExpenses", id);
-    return updateDoc(expenseDoc, updatedExpense);
+    // Ensure date is always a Firestore Timestamp
+    const expenseToSave = {
+      ...updatedExpense,
+      date: updatedExpense.date instanceof Date ? Timestamp.fromDate(updatedExpense.date) : updatedExpense.date,
+    };
+    return updateDoc(expenseDoc, expenseToSave);
   }
 
   deleteExpense(id: string) {
     const expenseDoc = doc(db, "allExpenses", id);
     return deleteDoc(expenseDoc);
+  }
+
+  /**
+   * Settle a specific debt in a split expense, saving settledAt, settledBy, and note if provided
+   */
+  async settleDebt(expenseId: string, fromId: string, toId: string, options?: { settledAt?: string; settledBy?: string; note?: string }) {
+    const expenseDoc = doc(db, "allExpenses", expenseId);
+    const expenseSnap = await getDoc(expenseDoc);
+    if (!expenseSnap.exists()) throw new Error("Expense not found");
+    const expenseData = expenseSnap.data();
+    const debts = expenseData.split?.debts || [];
+    const updatedDebts = debts.map((d: any) =>
+      d.from === fromId && d.to === toId
+        ? {
+            ...d,
+            settled: true,
+            ...(options?.settledAt ? { settledAt: options.settledAt } : {}),
+            ...(options?.settledBy ? { settledBy: options.settledBy } : {}),
+            ...(options?.note ? { note: options.note } : {}),
+          }
+        : d
+    );
+    await updateDoc(expenseDoc, {
+      "split.debts": updatedDebts,
+    });
+    return true;
   }
 
   // New analytics methods

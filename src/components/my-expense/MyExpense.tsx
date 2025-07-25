@@ -137,6 +137,7 @@ function MyExpense() {
               deleteExpense={handleDelete}
               updateExpense={handleUpdate}
               key={expense.id}
+              refreshExpenses={getExpense} // Pass refresh function
             />
           ))}
         </div>
