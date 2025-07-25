@@ -37,6 +37,16 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ open, onClose, onCrea
     };
     try {
       const groupId = await groupService.createGroup(groupData);
+      
+      // Add group creation activity
+      await groupService.addActivity(groupId, {
+        type: 'group_created',
+        user: {
+          id: currentUser.id || '',
+          name: currentUser.name || ''
+        }
+      });
+      
       setName(''); setIcon(''); setDescription('');
       if (onCreated) onCreated(groupId);
       onClose();

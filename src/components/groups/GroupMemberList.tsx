@@ -52,7 +52,23 @@ const GroupMemberList: React.FC<GroupMemberListProps> = ({ members, groupId, onM
     if (!selectedMember || !newRole) return;
     setLoading(true);
     try {
+      const oldRole = selectedMember.role;
       await groupService.changeRole(groupId, selectedMember.id, newRole);
+      
+      // Add activity log
+      await groupService.addActivity(groupId, {
+        type: 'role_changed',
+        user: {
+          id: user?.uid || user?.email || '',
+          name: user?.displayName || user?.email || 'Unknown User'
+        },
+        details: {
+          targetUser: selectedMember.name,
+          oldRole,
+          newRole
+        }
+      });
+      
       setSnackbarMessage(`Role updated for ${selectedMember.name}`);
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
@@ -73,6 +89,20 @@ const GroupMemberList: React.FC<GroupMemberListProps> = ({ members, groupId, onM
     setLoading(true);
     try {
       await groupService.removeMember(groupId, selectedMember.id);
+      
+      // Add activity log
+      await groupService.addActivity(groupId, {
+        type: 'member_removed',
+        user: {
+          id: user?.uid || user?.email || '',
+          name: user?.displayName || user?.email || 'Unknown User'
+        },
+        details: {
+          removedUser: selectedMember.name,
+          removedUserEmail: selectedMember.email
+        }
+      });
+      
       setSnackbarMessage(`${selectedMember.name} removed from group`);
       setSnackbarSeverity('success');
       setSnackbarOpen(true);

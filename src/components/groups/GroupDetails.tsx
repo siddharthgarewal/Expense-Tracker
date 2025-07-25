@@ -6,7 +6,8 @@ import { useUserAuth } from '../context/UserAuthContext';
 import GroupMemberList from './GroupMemberList';
 import InviteMemberForm from './InviteMemberForm';
 import PendingInvitations from './PendingInvitations';
-
+import GroupActivityFeed from './GroupActivityFeed';
+import EditGroupForm from './EditGroupForm';
 const groupService = new GroupService();
 
 const GroupDetails: React.FC = () => {
@@ -42,10 +43,16 @@ const GroupDetails: React.FC = () => {
       <Paper sx={{ p: 4, borderRadius: 4, mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Avatar sx={{ width: 64, height: 64, fontSize: 40, bgcolor: 'primary.main', mr: 3 }}>{group.icon || group.name?.[0] || '?'}</Avatar>
-          <Box>
+          <Box sx={{ flexGrow: 1 }}>
             <Typography variant="h4" fontWeight={700}>{group.name}</Typography>
             <Typography variant="body1" color="text.secondary">{group.description || 'No description'}</Typography>
           </Box>
+          {isAdmin && (
+            <EditGroupForm 
+              group={group}
+              onGroupUpdated={fetchGroup}
+            />
+          )}
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}>
           <Typography variant="subtitle1" fontWeight={600}>Members</Typography>
@@ -68,11 +75,8 @@ const GroupDetails: React.FC = () => {
           isAdmin={isAdmin}
           onInvitationUpdate={fetchGroup}
         />
-        {/* Placeholder for GroupActivityFeed */}
-        <Typography variant="subtitle1" fontWeight={600} sx={{ mt: 3 }}>Recent Activity</Typography>
-        <Box sx={{ mt: 1 }}>
-          <Typography variant="body2" color="text.secondary">(Activity feed coming soon)</Typography>
-        </Box>
+        {/* Group Activity Feed */}
+        cGroupActivityFeed groupId={groupId!} isAdmin={isAdmin} /e
       </Paper>
     </Box>
   );
