@@ -11,12 +11,17 @@ const GroupDetails: React.FC = () => {
   const [group, setGroup] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchGroup = () => {
     if (groupId) {
+      setLoading(true);
       groupService.getGroupById(groupId)
         .then(g => setGroup(g))
         .finally(() => setLoading(false));
     }
+  };
+
+  useEffect(() => {
+    fetchGroup();
   }, [groupId]);
 
   if (loading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}><CircularProgress /></Box>;
@@ -33,7 +38,11 @@ const GroupDetails: React.FC = () => {
           </Box>
         </Box>
         <Typography variant="subtitle1" fontWeight={600} sx={{ mt: 2 }}>Members</Typography>
-        <GroupMemberList members={group.members || []} />
+        <GroupMemberList 
+          members={group.members || []} 
+          groupId={groupId!} 
+          onMembersChange={fetchGroup}
+        />
         {/* Placeholder for GroupActivityFeed */}
         <Typography variant="subtitle1" fontWeight={600} sx={{ mt: 3 }}>Recent Activity</Typography>
         <Box sx={{ mt: 1 }}>
