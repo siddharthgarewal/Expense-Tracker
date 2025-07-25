@@ -16,7 +16,6 @@ import {
   Collapse
 } from '@mui/material';
 import { GroupService, GroupInvitation } from '../../services/group.service';
-import { useUserAuth } from '../context/UserAuthContext';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EmailIcon from '@mui/icons-material/Email';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -33,27 +32,22 @@ const PendingInvitations: React.FC<PendingInvitationsProps> = ({
   isAdmin, 
   onInvitationUpdate 
 }) => {
-  const { user } = useUserAuth();
   const groupService = new GroupService();
 
   const [invitations, setInvitations] = useState<GroupInvitation[]>([]);
-  const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
 
   const fetchInvitations = async () => {
-    setLoading(true);
     try {
       const groupInvitations = await groupService.getInvitationsForGroup(groupId);
       const pendingInvitations = groupInvitations.filter(inv => inv.status === 'pending');
       setInvitations(pendingInvitations);
     } catch (error) {
       console.error('Error fetching invitations:', error);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   useEffect(() => {

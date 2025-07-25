@@ -7,10 +7,8 @@ import {
   getDocs,
   updateDoc,
   arrayUnion,
-  arrayRemove,
   query,
   where,
-  setDoc,
   Timestamp
 } from '@firebase/firestore';
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { Breadcrumbs as MuiBreadcrumbs, Typography, Link, Box } from '@mui/material';
 import { useLocation, Link as RouterLink } from 'react-router-dom';
 import { NavigateNext as NavigateNextIcon, Home as HomeIcon } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
 
 interface BreadcrumbItem {
   label: string;
@@ -23,7 +22,6 @@ const routeConfig: Record<string, BreadcrumbItem> = {
 
 const Breadcrumbs: React.FC = () => {
   const location = useLocation();
-  const theme = useTheme();
   
   const pathnames = location.pathname.split('/').filter((x) => x);
   

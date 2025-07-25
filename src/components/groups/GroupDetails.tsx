@@ -6,7 +6,6 @@ import { useUserAuth } from '../context/UserAuthContext';
 import GroupMemberList from './GroupMemberList';
 import InviteMemberForm from './InviteMemberForm';
 import PendingInvitations from './PendingInvitations';
-import GroupActivityFeed from './GroupActivityFeed';
 import EditGroupForm from './EditGroupForm';
 const groupService = new GroupService();
 
@@ -75,8 +74,6 @@ const GroupDetails: React.FC = () => {
           isAdmin={isAdmin}
           onInvitationUpdate={fetchGroup}
         />
-        {/* Group Activity Feed */}
-        cGroupActivityFeed groupId={groupId!} isAdmin={isAdmin} /e
       </Paper>
     </Box>
   );

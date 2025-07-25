@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
-  Card,
-  CardContent,
-  CardActions,
   Button,
   Avatar,
   Chip,
@@ -29,7 +26,6 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import GroupIcon from '@mui/icons-material/Group';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import PersonIcon from '@mui/icons-material/Person';
 
 const InvitationNotifications: React.FC = () => {
   const { user } = useUserAuth();

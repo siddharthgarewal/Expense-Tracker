@@ -84,7 +84,7 @@ const ExpenseForm = ({
     },
   };
 
-  const { errors, isValid, touched, validateField, validateForm, clearValidation, setFieldTouched } = useFormValidation(validationRules);
+  const { errors, touched, validateField, setFieldTouched } = useFormValidation(validationRules);
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
